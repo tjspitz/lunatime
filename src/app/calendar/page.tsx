@@ -1,9 +1,24 @@
-export default function Calendar() {
+'use client';
+
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+export default function CalendarPage() {
   return (
-    <main>
-        <p>Hi, this is the Calendar page.</p>
-        <p>This is the main part of the app.</p>
-        <p>I&apos;ll need to use a calendar library of some sort to make this page come to life.</p>
+    <main className="flex flex-col min-h-[80vh]">
+      <p>Hi, this is the Calendar page.</p>
+      <p>This is the main part of the app.</p>
+
+      <div className="m-8 flex justify-center">
+        <Calendar
+          className="min-w-[66%]"
+          tileClassName="min-h-[10vh]"
+          calendarType="US"
+          view="month"
+          minDetail="year"
+          selectRange={true}
+        />
+      </div>
     </main>
   );
 }
