@@ -12,7 +12,7 @@ const userSchema = new Schema({
     state: String,
     zip: Number,
   },
-  dates: Cycle,
+  dates: [Cycle],
 });
 
 const User = models.User || model('User', userSchema);
