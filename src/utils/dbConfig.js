@@ -1,8 +1,12 @@
+// import 'dotenv';
+import { configDotenv } from 'dotenv';
 import mongoose from 'mongoose';
+import path from'path';
+configDotenv();
 
-const { MONGO_URI } = process.env.local;
+const { MONGO_HOST, MONGO_COLL } = process.env;
+const MONGO_URI = `mongodb://${path.join(MONGO_HOST, MONGO_COLL)}`
 
-// mongoose.connect(process.env.MONGO_URI)
 mongoose.connect(MONGO_URI);
 const db = mongoose.connection;
 db.once('open', () => {
