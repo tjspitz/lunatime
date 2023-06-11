@@ -13,11 +13,14 @@ const cycleMaker = (qty) => {
 
   let nextRangeStart = now.valueOf();
   let count = qty;
+  let document;
 
   while (--count > -1) {
-    let cycle = {};
+    document = {};
+    document.cycle = {};
+    document._id = new Date(nextRangeStart);
 
-    cycle._id = new Date(nextRangeStart);
+    let { cycle } = document;
     cycle.fStart = new Date(nextRangeStart);
     cycle.fEnd = new Date(cycle.fStart.valueOf() + randomNextDate(2, 3));
     cycle.pStart = new Date(cycle.fEnd.valueOf() + randomNextDate(1, 3));
@@ -26,7 +29,7 @@ const cycleMaker = (qty) => {
     cycle.mEnd = new Date(cycle.mStart.valueOf() + randomNextDate(2, 4));
 
     nextRangeStart = new Date(nextRangeStart + randomNextDate(14, 21));
-    allDates.push(cycle);
+    allDates.push(document);
   }
 
   return allDates;
@@ -117,7 +120,6 @@ const dates = cycleMaker(Math.random() * 4);
 
 const { MONGO_HOST, MONGO_COLL } = process.env;
 const MONGO_URI = `mongodb://${path.join(MONGO_HOST, MONGO_COLL)}`
-
 mongoose.connect(MONGO_URI);
 const db = mongoose.connection;
 db.once('open', () => {
