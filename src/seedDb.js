@@ -1,12 +1,15 @@
-// import db from './utils/dbConfig';
 import { configDotenv } from 'dotenv';
 configDotenv();
 import fs from 'fs';
 import path from'path';
 import mongoose from 'mongoose';
 import User from './models/userModel.js';
-// import cycleSchema from './models/cycleModel';
 
+const randomNextDate = (min, max) => {
+  const oneDay = 86400000;
+  const randomNumDays =  Math.floor(Math.random() * (max - min + 1) + min);
+  return oneDay * randomNumDays;
+};
 const cycleMaker = (qty) => {
   const allDates = [];
   const now = new Date();
@@ -28,16 +31,10 @@ const cycleMaker = (qty) => {
     cycle.mStart = new Date(cycle.pEnd.valueOf() + randomNextDate(1, 2));
     cycle.mEnd = new Date(cycle.mStart.valueOf() + randomNextDate(2, 4));
 
-    nextRangeStart = new Date(nextRangeStart + randomNextDate(14, 21));
+    nextRangeStart += randomNextDate(20, 35);
     allDates.push(document);
   }
-
   return allDates;
-};
-const randomNextDate = (min, max) => {
-  const oneDay = 86400000;
-  const randomNumDays =  Math.floor(Math.random() * (max - min + 1) + min);
-  return oneDay * randomNumDays;
 };
 const makeDB = async (numUsers) => {
   let count  = -1;
@@ -51,21 +48,21 @@ const makeDB = async (numUsers) => {
       email: emails[count],
       pic: picBuffer,
       address: {
-        city: addresses.city,
-        state: addresses.state,
-        zip: addresses.zip,
+        city: addresses[count].city,
+        state: addresses[count].state,
+        zip: addresses[count].zip,
       },
-      dates: dates,
+      dates: cycleMaker(Math.floor(Math.random() * 4 + 1)),
     }
     await User.create(dummyUser);
-    console.log(`\n${names[count][0]}${names[count][1]} was populated!`)
+    console.log(`\n${names[count][0]} ${names[count][1]} was populated!`)
   }
-console.log('done...');
+console.log('\ndone...');
 };
 
 // NAMES, PHONES, EMAILS, ADDRESSES => length 10
 // PICBUFFER => just 1
-// DATES => 1-3 cycles per use (unless the arg is changed)
+// DATES => assigned within makeDB
 const names = [
   ['Emily', 'Johnson'],
   ['Olivia', 'Smith'],
@@ -116,7 +113,6 @@ const addresses = [
 ];
 const picBuffer =
   fs.readFileSync('/Users/tjspitz/Pictures/ZoomPicsAndVids/botWatcher.png');
-const dates = cycleMaker(Math.random() * 4);
 
 const { MONGO_HOST, MONGO_COLL } = process.env;
 const MONGO_URI = `mongodb://${path.join(MONGO_HOST, MONGO_COLL)}`
