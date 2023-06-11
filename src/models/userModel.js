@@ -1,7 +1,8 @@
-import { Schema, model, models } from 'mongoose';
-import Cycle from './cycleModel';
+import mongoose from 'mongoose';
+// import Cycle from './cycleModel';
+import cycleSchema from './cycleModel.js';
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   phone: String,
@@ -12,9 +13,9 @@ const userSchema = new Schema({
     state: String,
     zip: Number,
   },
-  dates: [Cycle],
+  dates: [cycleSchema],
 });
 
-const User = models.User || model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

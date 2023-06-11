@@ -1,6 +1,6 @@
-import { Schema, model, models } from 'mongoose';
+import mongoose from 'mongoose';
 
-const cycleSchema = new Schema({
+const cycleSchema = new mongoose.Schema({
   _id: Date,
   cycle: {
     fStart: Date,
@@ -12,6 +12,6 @@ const cycleSchema = new Schema({
   },
 });
 
-const Cycle = models.Cycle || model('Cycle', cycleSchema);
+const Cycle = mongoose.model('Cycle', cycleSchema);
 
-export default Cycle;
+export default cycleSchema;
