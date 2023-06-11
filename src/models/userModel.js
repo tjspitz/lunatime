@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// import Cycle from './cycleModel';
 import cycleSchema from './cycleModel.js';
 
 const userSchema = new mongoose.Schema({

@@ -1,4 +1,3 @@
-// import 'dotenv';
 import { configDotenv } from 'dotenv';
 import mongoose from 'mongoose';
 import path from'path';
