@@ -1,18 +1,18 @@
 import { configDotenv } from 'dotenv';
 import mongoose from 'mongoose';
-import path from'path';
+import path from 'path';
 configDotenv();
 
 const { MONGO_HOST, MONGO_COLL } = process.env;
-const MONGO_URI = `mongodb://${path.join(MONGO_HOST, MONGO_COLL)}`
+const MONGO_URI = `mongodb://${path.join(MONGO_HOST, MONGO_COLL)}`;
 
-mongoose.connect(MONGO_URI);
-const db = mongoose.connection;
-db.once('open', () => {
-  console.log(`db connected on ${MONGO_URI}`);
-});
-db.on('error', () => {
-  console.error(`error on db connection ${MONGO_URI}`);
-});
-
-export default db;
+export default async function mongo() {
+  return mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+      console.log(`db connected at ${MONGO_URI}`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
