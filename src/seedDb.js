@@ -1,9 +1,9 @@
-import { configDotenv } from 'dotenv';
+const { configDotenv } = require('dotenv');
+const fs = require('fs');
+const path = require('path');
+const mongoose = require('mongoose');
+const User = require('./models/userModel');
 configDotenv();
-import fs from 'fs';
-import path from'path';
-import mongoose from 'mongoose';
-import User from './models/userModel.js';
 
 const randomNextDate = (min, max) => {
   const oneDay = 86400000;
