@@ -7,17 +7,17 @@ import { CycleDates } from './page';
 import { differenceInCalendarDays, isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 
-// const isSameDay = (a: Date, b: Date) => differenceInCalendarDays(a, b) === 0;
+const isSameDay = (a: Date, b: Date) => differenceInCalendarDays(a, b) === 0;
 
-// const isWithinRange = (date, range) => {
-//   return isWithinInterval(date, {/* start: range[?], end: range[1] */})
-// }
+const isWithinRange = (date, range) => {
+  return isWithinInterval(date, { start: range[0], end: range[range.length - 1] });
+}
 
-// const isWithinRanges = (date, ranges) => {
-//   return ranges.some((range) => isWithinRange(date, range))
-// };
+const isWithinRanges = (date, ranges) => {
+  return ranges.some((range) => isWithinRange(date, range));
+};
 
-const rangesToStyle = (cycleDates: CycleDates, start, end): [] => {
+const rangesToStyle = (cycleDates: CycleDates, start: string, end: string): [] => {
   const ranges: [] = [];
   const { dates } = cycleDates;
 
@@ -26,10 +26,10 @@ const rangesToStyle = (cycleDates: CycleDates, start, end): [] => {
     const subRange: [] = [];
 
     for (const key in cycle) {
-      if (key.toString() === start) {
+      if (key === start) {
         subRange.push(cycle[start]);
       }
-      if (key.toString() === end) {
+      if (key === end) {
         subRange.push(cycle[end]);
       }
     }
@@ -42,44 +42,39 @@ const rangesToStyle = (cycleDates: CycleDates, start, end): [] => {
 export default function CalendarContainer({ dates }: { dates: CycleDates }) {
   const [cycleDates, setCycleDates] = useState(dates);
   const [value, setValue] = useState(new Date());
-  // const [styledDates, setStyledDates] = useState(rangesToStyle(dates));
-
-  const fertileRange: [] = rangesToStyle(dates, 'fStart', 'fEnd')
-  const pmsRange: [] = rangesToStyle(dates, 'pStart', 'pEnd');
-  const menstrualRange: [] = rangesToStyle(dates, 'mStart', 'mEnd');
-
-  console.log('fertileRange? ', fertileRange);
-  console.log('pmsRange? ', pmsRange);
-  console.log('menstrualRange? ', menstrualRange);
+  const [fertileRanges, setFertileRanges] = useState(rangesToStyle(dates, 'fStart', 'fEnd'));
+  const [pmsRanges, setPmsRanges] = useState(rangesToStyle(dates, 'pStart', 'pEnd'));
+  const [menstrualRanges, setMenstrualRanges] = useState(rangesToStyle(dates, 'mStart', 'mEnd'));
 
   const handleChange = (newDate: Date) => {
-    console.log(newDate);
+    console.log('selected range: ', newDate);
 
     setValue(newDate);
   };
 
-  // const tileClassName = ({ date, view }: { date: Date; view: String }) => {
-  //   let style = 'min-h-[10vh]';
+  const tileClassName = ({ date, view }: { date: Date; view: String }) => {
+    let style = 'min-h-[10vh]';
 
-  //   if (view === 'month') {
-  //     if (true) {
-  //       style += ' ' + styles.fertile;
-  //     }
-  //     if (isWithinRanges(date, pmsRange)) {
-  //       style += ' ' + styles.pms;
-  //     }
-  //     if (isWithinRanges(date, menstrualRange)) {
-  //       style += ' ' + styles.menstrual;
-  //     }
-  //   }
-  //   return style;
-  // };
+    if (view === 'month') {
+      if (isWithinRanges(date, fertileRanges)) {
+        style += ' ' + styles.fertile;
+      }
+      if (isWithinRanges(date, pmsRanges)) {
+        style += ' ' + styles.pms;
+      }
+      if (isWithinRanges(date, menstrualRanges)) {
+        style += ' ' + styles.menstrual;
+      }
+      // if ()
+    }
+    return style;
+  };
 
   return (
     <main className="flex flex-col m-8 min-h-min">
       <Calendar
         className={'min-w-max'}
-        // tileClassName={tileClassName}
+        tileClassName={tileClassName}
         calendarType="US"
         view="month"
         minDetail="year"

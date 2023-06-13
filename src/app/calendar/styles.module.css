@@ -1,9 +1,21 @@
 .fertile {
   background: #86efac;
 }
+
 .pms {
   background: #f59e0b;
 }
+
 .menstrual {
   background: #e2778e;
+}
+
+.first {
+  border-top-left-radius: 33%;
+  border-bottom-left-radius: 33%;
+}
+
+.last {
+  border-top-right-radius: 33%;
+  border-bottom-right-radius: 33%;
 }
