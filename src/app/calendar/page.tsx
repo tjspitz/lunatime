@@ -1,22 +1,26 @@
 import CalendarContainer from './calendar';
 
 export interface CycleDates {
-  _id: Date;
-  cycle: {
-    _id: Date;
-    fStart: Date;
-    fEnd: Date;
-    pStart: Date;
-    pEnd: Date;
-    mStart: Date;
-    mEnd: Date;
-  }
+  _id: String;
+  dates: [
+    {
+      _id: Date;
+      cycle: {
+        fStart: Date;
+        fEnd: Date;
+        pStart: Date;
+        pEnd: Date;
+        mStart: Date;
+        mEnd: Date;
+      };
+    }
+  ];
 }
 
 const getData = async (id: string) => {
   try {
     const url = 'http://localhost:3000/api/calendar';
-    const params = new URLSearchParams({userId: id});
+    const params = new URLSearchParams({ userId: id });
     const res = await fetch(`${url}?${params}`);
     return res.json();
   } catch (error: any) {
@@ -27,7 +31,13 @@ const getData = async (id: string) => {
 
 export default async function CalendarPage() {
   const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
-  const dates: CycleDates  = await getData(userId);
+  const dates: CycleDates = await getData(userId);
+  dates.dates.forEach((entry) => {
+    const { cycle } = entry;
+    for (const day in cycle) {
+      cycle[day] = new Date(cycle[day])
+    }
+  });
 
   return (
     <main>
