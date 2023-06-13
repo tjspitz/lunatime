@@ -1,47 +1,40 @@
-'use client';
+import CalendarContainer from './calendar';
 
-import 'react-calendar/dist/Calendar.css';
+export interface CycleDates {
+  _id: Date;
+  cycle: {
+    _id: Date;
+    fStart: Date;
+    fEnd: Date;
+    pStart: Date;
+    pEnd: Date;
+    mStart: Date;
+    mEnd: Date;
+  }
+}
 
-import styles from './styles.module.css'
-import Calendar from 'react-calendar';
-import { useState } from 'react';
+const getData = async (id: string) => {
+  try {
+    const url = 'http://localhost:3000/api/calendar';
+    const params = new URLSearchParams({userId: id});
+    const res = await fetch(`${url}?${params}`);
+    return res.json();
+  } catch (error: any) {
+    console.error(error);
+    return null;
+  }
+};
 
-export default function CalendarPage() {
-  const [value, setValue] = useState(new Date());
-
-  const dateRangeClass = ({ date, view }) => {
-    let style = 'min-h-[10vh]';
-
-    if (view === 'month') {
-      if (true) {
-        style += styles.menst;
-      }
-    }
-    return style
-  };
-
-  const handleChange = (newDate) => {
-    console.log(newDate);
-
-    setValue(newDate);
-  };
+export default async function CalendarPage() {
+  const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
+  const dates: CycleDates  = await getData(userId);
 
   return (
-    <main className="flex flex-col min-h-[80vh]">
+    <main>
       <p>Hi, this is the Calendar page.</p>
       <p>This is the main part of the app.</p>
-
       <div className="m-8 flex justify-center">
-        <Calendar
-          className="min-w-[66%]"
-          tileClassName={dateRangeClass}
-          calendarType="US"
-          view="month"
-          minDetail="year"
-          selectRange={true}
-          value={value}
-          onChange={handleChange}
-        />
+        <CalendarContainer dates={dates} />
       </div>
     </main>
   );
