@@ -11,11 +11,11 @@
 }
 
 .first {
-  border-top-left-radius: 33%;
-  border-bottom-left-radius: 33%;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
 }
 
 .last {
-  border-top-right-radius: 33%;
-  border-bottom-right-radius: 33%;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
 }
