@@ -1,5 +1,5 @@
 export interface CycleDates {
-  _id: String;
+  _id: string;
   dates: [
     {
       _id: Date;
@@ -17,15 +17,15 @@ export interface CycleDates {
 }
 
 export interface ProfileInfo {
-  _id: String;
-  firstName: String;
-  lastName: String;
-  phone: String;
-  email: String;
+  _id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
   pic: any;
   address: {
-    city: String;
-    state: String;
-    zip: Number;
+    city: string;
+    state: string;
+    zip: number;
   };
 }
