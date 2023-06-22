@@ -2,7 +2,7 @@
 import 'react-calendar/dist/Calendar.css';
 import styles from './styles.module.css';
 import Calendar from 'react-calendar';
-import { CycleDates } from './page';
+import { CycleDates } from '../../utils/interfaces';
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 
@@ -37,7 +37,6 @@ const findRangeBounds = (date: Date, ranges: Date[][]): string | undefined => {
     let roundedFirstBound = `${range[0].getDate()}${range[0].getMonth()}${range[0].getFullYear()}`;
     let roundedLastBound = `${range[1].getDate()}${range[1].getMonth()}${range[1].getFullYear()}`;
     if (roundedDate === roundedFirstBound) {
-      console.log('hit');
       prop = 'first';
     }
     if (roundedDate === roundedLastBound) {
@@ -72,7 +71,7 @@ const rangesToStyle = (
   return ranges;
 };
 
-export default function CalendarContainer({ dates }: { dates: CycleDates }) {
+const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   const [cycleDates, setCycleDates] = useState(dates);
   const [value, setValue] = useState(new Date());
   const [fertileRanges, setFertileRanges] = useState(
@@ -85,7 +84,7 @@ export default function CalendarContainer({ dates }: { dates: CycleDates }) {
     rangesToStyle(dates, 'mStart', 'mEnd')
   );
 
-  const handleChange = (newDate: Date) => {
+  const handleChange = (newDate: Date): void => {
     console.log('selected range: ', newDate);
 
     setValue(newDate);
@@ -125,4 +124,6 @@ export default function CalendarContainer({ dates }: { dates: CycleDates }) {
       />
     </main>
   );
-}
+};
+
+export default CalendarContainer;

@@ -1,22 +1,5 @@
+import { CycleDates } from '../../utils/interfaces';
 import CalendarContainer from './calendar';
-
-export interface CycleDates {
-  _id: String;
-  dates: [
-    {
-      _id: Date;
-      cycle: {
-        [key: string]: Date;
-        fStart: Date;
-        fEnd: Date;
-        pStart: Date;
-        pEnd: Date;
-        mStart: Date;
-        mEnd: Date;
-      };
-    }
-  ];
-}
 
 const getData = async (id: string) => {
   try {
@@ -30,7 +13,7 @@ const getData = async (id: string) => {
   }
 };
 
-export default async function CalendarPage() {
+const CalendarPage = async () => {
   const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
   const dates: CycleDates = await getData(userId);
   dates.dates.forEach((entry) => {
@@ -49,4 +32,6 @@ export default async function CalendarPage() {
       </div>
     </main>
   );
-}
+};
+
+export default CalendarPage;
