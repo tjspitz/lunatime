@@ -91,7 +91,7 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   };
 
   const tileClassName = ({ date, view }: { date: Date; view: String }): string => {
-    let style = 'min-h-[10vh]';
+    let style = 'min-h-[10vh] text-med';
 
     if (view === 'month') {
       if (isWithinRanges(date, fertileRanges)) {

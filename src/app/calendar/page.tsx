@@ -25,8 +25,12 @@ const CalendarPage = async () => {
 
   return (
     <main>
-      <p>Hi, this is the Calendar page.</p>
-      <p>This is the main part of the app.</p>
+      <p className="text-2xl">
+        Hi, this is the Calendar page.
+      </p>
+      <p className="text-2xl">
+        This is the main part of the app.
+      </p>
       <div className="m-8 flex justify-center">
         <CalendarContainer dates={dates} />
       </div>
