@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 import Link from 'next/link';
-import { Inter } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Nunito({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -28,7 +31,7 @@ export default function RootLayout({
 
 export function NavBar() {
   return (
-    <div className="flex items-center justify-between mx-12">
+    <div className="flex text-med items-center justify-between mx-12">
       <Link
         className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
         href="./"
@@ -39,19 +42,19 @@ export function NavBar() {
         className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
         href="./calendar"
       >
-        Go to Calendar
+        Calendar
       </Link>
       <Link
         className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
         href="./profile"
       >
-        Go to Profile
+        Profile
       </Link>
       <Link
         className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
         href="./stats"
       >
-        Go to Stats
+        Stats
       </Link>
     </div>
   );
