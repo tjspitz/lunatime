@@ -111,9 +111,9 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   };
 
   return (
-    <main className="flex flex-col m-8 min-h-min">
+    <main className="flex flex-col m-8 min-h-min w-3/4">
       <Calendar
-        className={'min-w-max'}
+        className={'min-w-fit'}
         tileClassName={tileClassName}
         calendarType="US"
         view="month"
