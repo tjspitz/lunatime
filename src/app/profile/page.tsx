@@ -13,59 +13,6 @@ const getData = async (id: string) => {
   }
 };
 
-const fiftyStates = [
-  'AL', // Alabama
-  'AK', // Alaska
-  'AZ', // Arizona
-  'AR', // Arkansas
-  'CA', // California
-  'CO', // Colorado
-  'CT', // Connecticut
-  'DE', // Delaware
-  'FL', // Florida
-  'GA', // Georgia
-  'HI', // Hawaii
-  'ID', // Idaho
-  'IL', // Illinois
-  'IN', // Indiana
-  'IA', // Iowa
-  'KS', // Kansas
-  'KY', // Kentucky
-  'LA', // Louisiana
-  'ME', // Maine
-  'MD', // Maryland
-  'MA', // Massachusetts
-  'MI', // Michigan
-  'MN', // Minnesota
-  'MS', // Mississippi
-  'MO', // Missouri
-  'MT', // Montana
-  'NE', // Nebraska
-  'NV', // Nevada
-  'NH', // New Hampshire
-  'NJ', // New Jersey
-  'NM', // New Mexico
-  'NY', // New York
-  'NC', // North Carolina
-  'ND', // North Dakota
-  'OH', // Ohio
-  'OK', // Oklahoma
-  'OR', // Oregon
-  'PA', // Pennsylvania
-  'RI', // Rhode Island
-  'SC', // South Carolina
-  'SD', // South Dakota
-  'TN', // Tennessee
-  'TX', // Texas
-  'UT', // Utah
-  'VT', // Vermont
-  'VA', // Virginia
-  'WA', // Washington
-  'WV', // West Virginia
-  'WI', // Wisconsin
-  'WY',  // Wyoming
-]
-
 const ProfilePage = async () => {
   const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
   const profile: ProfileInfo = await getData(userId);
@@ -74,7 +21,7 @@ const ProfilePage = async () => {
     <main>
       <p className="text-2xl">This is where you&apos;d view and/or edit your profile.</p>
       <div className="m-8 flex justify-center">
-        <ProfileContainer profile={profile} fiftyStates={fiftyStates}/>
+        <ProfileContainer profile={profile}/>
       </div>
     </main>
   );
