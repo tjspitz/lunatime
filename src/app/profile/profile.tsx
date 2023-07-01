@@ -1,21 +1,27 @@
 'use client';
 import Image from 'next/image';
-import { ProfileInfo } from '../../utils/interfaces';
+import { PatchProfile } from '@/utils/types';
+import { ProfileInfo } from '@/utils/interfaces';
 import EditForm from './editProfile';
 import { useEffect, useState } from 'react';
 
-const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
+const ProfileContainer = ({
+  profile,
+  patchProfile,
+}: {
+  profile: ProfileInfo;
+  patchProfile: PatchProfile;
+}) => {
   const [profileData, setProfileData] = useState(profile);
   const [editable, setEditable] = useState(false);
-  const { _id, firstName, lastName, phone, email, pic } = profileData;
-  const { city, state, zip } = profileData.address;
 
+  const { _id, firstName, lastName, pic } = profileData;
   const picBase64 = Buffer.from(pic).toString('base64');
 
   const handleUpdateProfile = (e: Event) => {
     e.preventDefault();
     setEditable(false);
-    // set the Profile Data state (so no GET needed)
+
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
@@ -31,11 +37,11 @@ const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
         city: String(formJson.city),
         state: String(formJson.state),
         zip: Number(formJson.zip),
-      }
+      },
     });
-    // TODO:
-    // send a POST/PATCH request
 
+    // patchProfile(_id, formJson);
+    patchProfile(_id, formData);
   };
 
   return (
@@ -62,11 +68,7 @@ const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
           {firstName}&nbsp;{lastName}
         </p>
         <EditForm
-          phone={phone}
-          email={email}
-          city={city}
-          state={state}
-          zip={zip}
+          profileData={profileData}
           editable={editable}
           handleUpdateProfile={handleUpdateProfile}
         />

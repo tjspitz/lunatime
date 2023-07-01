@@ -1,5 +1,5 @@
-import mongo from '../../../utils/dbConfig';
-import User from '../../../models/userModel';
+import mongo from '@/utils/dbConfig';
+import User from '@/models/userModel';
 import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -18,8 +18,20 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest, res: NextResponse) {
 
 }
+*/
 
 export async function PATCH(req: NextRequest, res: NextResponse) {
+  try {
+    await mongo();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
 
+
+    // const { phone, email, address } = req.body
+
+    const res = await User.findByIdAndUpdate(userId, req.body);
+    return NextResponse.json(res);
+  } catch (error) {
+    return NextResponse.json(error);
+  }
 }
-*/

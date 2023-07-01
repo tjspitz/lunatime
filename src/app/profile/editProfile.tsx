@@ -1,4 +1,5 @@
 'use client';
+import { ProfileInfo } from '@/utils/interfaces';
 import { useState } from 'react';
 
 const fiftyStates = [
@@ -55,22 +56,20 @@ const fiftyStates = [
 ];
 
 const EditForm = ({
-  phone,
-  email,
-  city,
-  state,
-  zip,
+  profileData,
   editable,
   handleUpdateProfile,
 }: {
-  phone: string;
-  email: string;
-  city: string;
-  state: string;
-  zip: number;
+  profileData: ProfileInfo
   editable: boolean;
   handleUpdateProfile: any // FIX TYPE
 }) => {
+  const {
+    phone,
+    email,
+    address: {city, state, zip},
+  } = profileData;
+
   const [theState, setTheState] = useState(state);
 
   return (
