@@ -74,21 +74,33 @@ const EditForm = ({
 
   return (
     <main>
-      <form
-        className="py-4 flex flex-col"
-        onSubmit={handleUpdateProfile}
-      >
+      <form className="py-4 flex flex-col" onSubmit={handleUpdateProfile}>
         <label className="text-med py-2">
           Phone:&nbsp;&nbsp;&nbsp;
-          <input name="phone" defaultValue={phone} disabled={!editable} />
+          <input
+            name="phone"
+            defaultValue={phone}
+            disabled={!editable}
+            size={phone.length + 1}
+          />
         </label>
         <label className="text-med py-2">
           Email:&nbsp;&nbsp;&nbsp;
-          <input name="email" defaultValue={email} disabled={!editable} />
+          <input
+            name="email"
+            defaultValue={email}
+            size={email.length + 1}
+            disabled={!editable}
+          />
         </label>
         <label className="text-med py-2">
           City:&nbsp;&nbsp;&nbsp;
-          <input name="city" defaultValue={city} disabled={!editable} />
+          <input
+            name="city"
+            defaultValue={city}
+            disabled={!editable}
+            size={city.length + 1}
+          />
         </label>
         <label className="text-med py-2">
           State:&nbsp;&nbsp;&nbsp;
@@ -111,6 +123,7 @@ const EditForm = ({
             name="zip"
             defaultValue={zip.toString()}
             disabled={!editable}
+            size={6}
           />
         </label>
         {editable && (
@@ -119,7 +132,7 @@ const EditForm = ({
               className="p-2 mx-4 rounded-md border-solid border-2 border-red-400"
               type="reset"
             >
-              Cancel
+              Reset
             </button>
             <button
               className="p-2 rounded-md border-solid border-2 border-red-400"
