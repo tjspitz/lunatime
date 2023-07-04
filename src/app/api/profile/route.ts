@@ -25,11 +25,15 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
     await mongo();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
+    const body = await req.json();
+    const { phone, email, address } = body;
+    const update = { phone, email, address };
+    const options = {
+      new: true,
+      select: { phone, email, address },
+    }
 
-
-    // const { phone, email, address } = req.body
-
-    const res = await User.findByIdAndUpdate(userId, req.body);
+    const res = await User.findByIdAndUpdate(userId, update, options);
     return NextResponse.json(res);
   } catch (error) {
     return NextResponse.json(error);

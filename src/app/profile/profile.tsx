@@ -5,12 +5,34 @@ import { ProfileInfo } from '@/utils/interfaces';
 import EditForm from './editProfile';
 import { useEffect, useState } from 'react';
 
+const patchProfile: PatchProfile = async (id, data) => {
+  try {
+    const url = 'http://localhost:3000/api/profile';
+    const { phone, email, city, state, zip } = data;
+    const formattedData = {
+      phone,
+      email,
+      address: { city, state, zip }
+    }
+    const params = new URLSearchParams({ userId: id });
+    const config = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formattedData),
+    }
+
+    const res = await fetch(`${url}?${params}`, config);
+    return res.json();
+  } catch (error: any) {
+    console.error(error);
+    return null;
+  }
+};
+
 const ProfileContainer = ({
   profile,
-  patchProfile,
 }: {
   profile: ProfileInfo;
-  patchProfile: PatchProfile;
 }) => {
   const [profileData, setProfileData] = useState(profile);
   const [editable, setEditable] = useState(false);
@@ -40,8 +62,7 @@ const ProfileContainer = ({
       },
     });
 
-    // patchProfile(_id, formJson);
-    patchProfile(_id, formData);
+    patchProfile(_id, formJson);
   };
 
   return (
