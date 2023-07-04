@@ -60,21 +60,24 @@ const EditForm = ({
   editable,
   handleUpdateProfile,
 }: {
-  profileData: ProfileInfo
+  profileData: ProfileInfo;
   editable: boolean;
-  handleUpdateProfile: any // FIX TYPE
+  handleUpdateProfile: any; // FIX TYPE
 }) => {
   const {
     phone,
     email,
-    address: {city, state, zip},
+    address: { city, state, zip },
   } = profileData;
 
   const [theState, setTheState] = useState(state);
 
   return (
     <main>
-      <form className="py-4 flex flex-col" onSubmit={handleUpdateProfile}>
+      <form
+        className="py-4 flex flex-col"
+        onSubmit={handleUpdateProfile}
+      >
         <label className="text-med py-2">
           Phone:&nbsp;&nbsp;&nbsp;
           <input name="phone" defaultValue={phone} disabled={!editable} />
