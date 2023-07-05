@@ -21,9 +21,6 @@ const ProfilePage = async () => {
 
   return (
     <main>
-      <p className="text-2xl">
-        This is where you&apos;d view and/or edit your profile.
-      </p>
       <div className="m-8 flex justify-center">
         <ProfileContainer profile={profile} />
       </div>

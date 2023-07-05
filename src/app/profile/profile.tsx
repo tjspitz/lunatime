@@ -12,14 +12,14 @@ const patchProfile: PatchProfile = async (id, data) => {
     const formattedData = {
       phone,
       email,
-      address: { city, state, zip }
-    }
+      address: { city, state, zip },
+    };
     const params = new URLSearchParams({ userId: id });
     const config = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formattedData),
-    }
+    };
 
     const res = await fetch(`${url}?${params}`, config);
     return res.json();
@@ -29,20 +29,17 @@ const patchProfile: PatchProfile = async (id, data) => {
   }
 };
 
-const ProfileContainer = ({
-  profile,
-}: {
-  profile: ProfileInfo;
-}) => {
+const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
   const [profileData, setProfileData] = useState(profile);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [editable, setEditable] = useState(false);
 
   const { _id, firstName, lastName, pic } = profileData;
-  const picBase64 = Buffer.from(pic).toString('base64');
 
   const handleUpdateProfile = (e: Event) => {
     e.preventDefault();
     setEditable(false);
+    setSelectedImage(null)
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -66,31 +63,72 @@ const ProfileContainer = ({
   };
 
   return (
-    <main className="flex m-8">
+    <main className="m-8">
       <div className="mx-8">
-        <Image
-          src={`data:image/png;base64,${picBase64}`}
-          alt="User's profile pic"
-          width={100}
-          height={100}
-          style={{ borderRadius: '50%' }}
-        />
-        <Image
-          src="/edit.png"
-          alt="Edit your profile"
-          width={50}
-          height={50}
-          style={{ borderRadius: '50%' }}
-          onClick={() => setEditable(!editable)}
-        />
-      </div>
-      <div>
-        <p className="text-lg py-2">
-          {firstName}&nbsp;{lastName}
-        </p>
+        <span className="flex items-center justify-center">
+          {/* <div className="flex flex-col">
+            {selectedImage ? (
+              <div>
+                <Image
+                  src={URL.createObjectURL(selectedImage)}
+                  alt="Selected profile pic"
+                  width={100}
+                  height={100}
+                  className="rounded-full"
+                />
+              </div>
+            ) : (
+              <Image
+                src={`data:image/png;base64,${picBase64}`}
+                alt="User's profile pic"
+                width={100}
+                height={100}
+                className="rounded-full"
+              />
+            )}
+            {editable && (
+              <div>
+                <input
+                  id="choosePic"
+                  type="file"
+                  name="newPic"
+                  className="my-2 hidden"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    console.log(e.target.files[0]);
+                    setSelectedImage(e.target.files[0]);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="p-2 my-2 rounded-md border-solid border-2 border-red-400"
+                  onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('choosePic')?.click()
+                  }}
+                >
+                  Edit Pic
+                </button>
+              </div>
+            )}
+          </div> */}
+          <p className="text-lg m-4">
+            {firstName}&nbsp;{lastName}
+          </p>
+          <Image
+            src="/edit.png"
+            alt="Edit your profile"
+            width={66}
+            height={66}
+            className="m-4 rounded-full"
+            onClick={() => setEditable(!editable)}
+          />
+        </span>
         <EditForm
           profileData={profileData}
           editable={editable}
+          selectedImage={selectedImage}
+          setSelectedImage={setSelectedImage}
           handleUpdateProfile={handleUpdateProfile}
         />
       </div>
