@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { ProfileInfo } from '@/utils/interfaces';
+import { ProfileInfo } from '@/utils/types';
 import { useState } from 'react';
 
 const fiftyStates = [

@@ -1,5 +1,5 @@
-import mongo from '../../../utils/dbConfig';
-import User from '../../../models/userModel';
+import mongo from '@/utils/dbConfig';
+import User from '@/models/userModel';
 import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {

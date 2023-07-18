@@ -1,8 +1,7 @@
-import { ProfileInfo } from '@/utils/interfaces';
-import { ReqOptions } from '@/utils/types';
+import { GetProfile, ProfileInfo, ReqOptions } from '@/utils/types';
 import ProfileContainer from './profile';
 
-const getProfile = async (id: string) => {
+const getProfile: GetProfile = async (id) => {
   const url = 'http://localhost:3000/api/profile';
   const params = new URLSearchParams({ userId: id });
   const options: ReqOptions = { cache: 'no-store' };
@@ -11,7 +10,7 @@ const getProfile = async (id: string) => {
     return res.json();
   } catch (error: any) {
     console.error(error);
-    return null;
+    return {} as ProfileInfo;
   }
 };
 

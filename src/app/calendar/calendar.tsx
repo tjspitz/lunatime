@@ -2,7 +2,7 @@
 import 'react-calendar/dist/Calendar.css';
 import styles from './styles.module.css';
 import Calendar from 'react-calendar';
-import { CycleDates } from '../../utils/interfaces';
+import { CycleDates } from '@/utils/types';
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 

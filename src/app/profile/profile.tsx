@@ -1,7 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { PatchProfile } from '@/utils/types';
-import { ProfileInfo } from '@/utils/interfaces';
+import { PatchProfile, ProfileInfo } from '@/utils/types';
 import EditForm from './editProfile';
 import { useEffect, useState } from 'react';
 

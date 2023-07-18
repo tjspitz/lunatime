@@ -1,7 +1,7 @@
-import { CycleDates } from '../../utils/interfaces';
+import { CycleDates, GetCycles, ProfileInfo } from '@/utils/types';
 import CalendarContainer from './calendar';
 
-const getData = async (id: string) => {
+const getData: GetCycles = async (id) => {
   try {
     const url = 'http://localhost:3000/api/calendar';
     const params = new URLSearchParams({ userId: id });
@@ -9,7 +9,7 @@ const getData = async (id: string) => {
     return res.json();
   } catch (error: any) {
     console.error(error);
-    return null;
+    return {} as CycleDates;
   }
 };
 

@@ -1,3 +1,5 @@
+/* MOVING TO TYPES.JS
+
 export interface CycleDates {
   _id: string;
   dates: [
@@ -29,3 +31,4 @@ export interface ProfileInfo {
     zip: number;
   };
 }
+*/
