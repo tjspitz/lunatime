@@ -1,7 +1,7 @@
 import { CycleDates, GetCycles, ProfileInfo } from '@/utils/types';
 import CalendarContainer from './calendar';
 
-const getData: GetCycles = async (id) => {
+const getCycles: GetCycles = async (id) => {
   try {
     const url = 'http://localhost:3000/api/calendar';
     const params = new URLSearchParams({ userId: id });
@@ -15,7 +15,7 @@ const getData: GetCycles = async (id) => {
 
 const CalendarPage = async () => {
   const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
-  const dates: CycleDates = await getData(userId);
+  const dates: CycleDates = await getCycles(userId);
   dates.dates.forEach((entry) => {
     const { cycle } = entry;
     for (const day in cycle) {
