@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { ProfileInfo } from '@/utils/types';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 const fiftyStates = [
   'Alabama',
@@ -64,10 +64,10 @@ const EditForm = ({
   handleUpdateProfile,
 }: {
   profileData: ProfileInfo;
-  editable: boolean;
-  selectedImage: string | null;
-  setSelectedImage: any; // FIX TYPE
-  handleUpdateProfile: any; // FIX TYPE
+  editable: Boolean;
+  selectedImage: ArrayBuffer | String;
+  setSelectedImage: Dispatch<SetStateAction<ArrayBuffer | String>>;
+  handleUpdateProfile: any;
 }) => {
   const {
     phone,
@@ -78,16 +78,19 @@ const EditForm = ({
   const [theState, setTheState] = useState(state);
   const [newPic, setNewPic] = useState(null);
   const picBase64 = Buffer.from(profileData.pic).toString('base64');
+  const selectedPic = Buffer.from(selectedImage).toString('base64');
 
-  const handlePicChange = (e) => {
+  const handlePicChange = (e: any) => {
+    e.preventDefault();
+    const newPic = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const buffer = Buffer.from(e.target.result);
-      console.log('buffer: ', buffer);
-      setSelectedImage(buffer);
+    reader.onload = (evt) => {
+      setSelectedImage(evt.target?.result || '');
+
     }
 
-    reader.readAsArrayBuffer(selectedImage)
+    // reader.readAsText(newPic);
+    reader.readAsArrayBuffer(newPic);
   }
 
   return (
@@ -97,10 +100,10 @@ const EditForm = ({
           {selectedImage ? (
             <div>
               <Image
-                src={URL.createObjectURL(selectedImage)}
+                src={`data:image/png;base64,${selectedPic}`}
                 alt="Selected profile pic"
-                width={100}
                 height={100}
+                width={100}
                 className="rounded-full"
               />
             </div>
@@ -119,26 +122,9 @@ const EditForm = ({
                 id="choosePic"
                 type="file"
                 name="newPic"
+                accept="image/*"
                 className="my-2 hidden"
-                onChange={(e) => {
-                  const blob = URL.createObjectURL(e.target.files[0]);
-                  setSelectedImage(blob);
-                  const reader = new FileReader();
-                  reader.onload = (e) => {
-                    const buffer = Buffer.from(blob);
-                    console.log('buffer: ', blob);
-
-                  }
-
-                  reader.readAsArrayBuffer(blob)
-
-
-
-                  // setSelectedImage(e.target.files[0])
-                }
-                }
-                // onChange={handlePicChange}
-
+                onChange={handlePicChange}
               />
               <button
                 type="button"
