@@ -76,29 +76,30 @@ const EditForm = ({
   } = profileData;
 
   const [theState, setTheState] = useState(state);
-  const [newPic, setNewPic] = useState(null);
   const picBase64 = Buffer.from(profileData.pic).toString('base64');
   const selectedPic = Buffer.from(selectedImage).toString('base64');
+
+  const handlePicEdit = (e: any) => {
+    e.preventDefault();
+    document.getElementById('choosePic')?.click();
+  };
 
   const handlePicChange = (e: any) => {
     e.preventDefault();
     const newPic = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (evt) => {
-      setSelectedImage(evt.target?.result || '');
+    reader.onload = (picEvent) => {
+      setSelectedImage(picEvent.target?.result || '');
 
     }
-
-    // reader.readAsText(newPic);
     reader.readAsArrayBuffer(newPic);
   }
 
   return (
     <main>
       <form className="py-4 flex flex-col" onSubmit={handleUpdateProfile}>
-        <div className="flex py-2 items-center">
+        <label className="flex py-2 items-center">
           {selectedImage ? (
-            <div>
               <Image
                 src={`data:image/png;base64,${selectedPic}`}
                 alt="Selected profile pic"
@@ -106,7 +107,6 @@ const EditForm = ({
                 width={100}
                 className="rounded-full"
               />
-            </div>
           ) : (
             <Image
               src={`data:image/png;base64,${picBase64}`}
@@ -117,7 +117,7 @@ const EditForm = ({
             />
           )}
           {editable && (
-            <div>
+            <>
               <input
                 id="choosePic"
                 type="file"
@@ -129,13 +129,13 @@ const EditForm = ({
               <button
                 type="button"
                 className="p-2 m-2 rounded-md border-solid border-2 border-red-400"
-                onClick={() => {document.getElementById('choosePic')?.click()}}
+                onClick={handlePicEdit}
               >
                 Edit Pic
               </button>
-            </div>
+            </>
           )}
-        </div>
+        </label>
         <label className="text-med py-2">
           Phone:&nbsp;&nbsp;&nbsp;
           <input
@@ -187,7 +187,6 @@ const EditForm = ({
             size={6}
           />
         </label>
-
           <div
             className={`flex flex-row justify-end text-med ${editable ? null : 'hidden'}`}
           >
@@ -204,7 +203,6 @@ const EditForm = ({
               Save
             </button>
           </div>
-
       </form>
     </main>
   );
