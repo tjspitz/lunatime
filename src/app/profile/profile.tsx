@@ -52,7 +52,7 @@ const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
 
   return (
     <main className="m-8">
-      <div className="mx-8">
+      <div className="mx-8 p-8 rounded-lg bg-gradient-to-b from-yellow-100 to-yellow-50 shadow-xl">
         <span className="flex items-center justify-center">
           <p className="text-lg m-4">
             {firstName}&nbsp;{lastName}
