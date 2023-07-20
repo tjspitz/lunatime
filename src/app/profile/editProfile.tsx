@@ -65,19 +65,21 @@ const EditForm = ({
 }: {
   profileData: ProfileInfo;
   editable: Boolean;
-  selectedImage: ArrayBuffer | String;
-  setSelectedImage: Dispatch<SetStateAction<ArrayBuffer | String>>;
+  selectedImage: ArrayBuffer | null;
+  setSelectedImage: Dispatch<SetStateAction<ArrayBuffer | null>>;
   handleUpdateProfile: any;
 }) => {
   const {
+    pic,
     phone,
     email,
     address: { city, state, zip },
   } = profileData;
+  const picBase64 = Buffer.from(pic).toString('base64');
+  const selectedPic =
+    selectedImage ? Buffer.from(selectedImage).toString('base64') : null;
 
   const [theState, setTheState] = useState(state);
-  const picBase64 = Buffer.from(profileData.pic).toString('base64');
-  const selectedPic = Buffer.from(selectedImage).toString('base64');
 
   const handlePicEdit = (e: any) => {
     e.preventDefault();
@@ -87,13 +89,14 @@ const EditForm = ({
   const handlePicChange = (e: any) => {
     e.preventDefault();
     const newPic = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (picEvent) => {
-      setSelectedImage(picEvent.target?.result || '');
-
+    if (newPic) {
+      newPic.arrayBuffer()
+      .then((arrBuf: ArrayBuffer) => {
+        console.log(arrBuf)
+        setSelectedImage(arrBuf)
+      });
     }
-    reader.readAsArrayBuffer(newPic);
-  }
+  };
 
   return (
     <main>
