@@ -7,8 +7,9 @@ import { useEffect, useState } from 'react';
 const patchProfile: PatchProfile = async (id, data) => {
   try {
     const url = 'http://localhost:3000/api/profile';
-    const { phone, email, city, state, zip } = data;
+    const { newPic, phone, email, city, state, zip } = data;
     const formattedData = {
+      newPic: Buffer.from(newPic), // TODO: proper typing
       phone,
       email,
       address: { city, state, zip },
@@ -24,41 +25,29 @@ const patchProfile: PatchProfile = async (id, data) => {
     return res.json();
   } catch (error: any) {
     console.error(error);
-    return null;
+    return error;
   }
 };
 
 const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
-  const [profileData, setProfileData] = useState<ProfileInfo>(profile);
-  const [selectedImage, setSelectedImage] = useState<ArrayBuffer | String>('');
+  const [selectedImage, setSelectedImage] = useState<ArrayBuffer | null>(null);
   const [editable, setEditable] = useState<Boolean>(false);
 
-  const { _id, firstName, lastName, pic } = profileData;
+  const { _id, firstName, lastName } = profile;
 
   const handleUpdateProfile = (e: Event) => {
     e.preventDefault();
     setEditable(false);
-    setSelectedImage('');
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
+    formJson.newPic = selectedImage;
+    // ^ TODO: proper typing, less sketchy workaround
 
-    setProfileData({
-      _id,
-      firstName,
-      lastName,
-      phone: String(formJson.phone),
-      email: String(formJson.email),
-      pic,
-      address: {
-        city: String(formJson.city),
-        state: String(formJson.state),
-        zip: Number(formJson.zip),
-      },
-    });
-
-    patchProfile(_id, formJson);
+    patchProfile(_id, formJson)
+      .then((response) => console.log('SUCCESS: ', response)) // DEV ONLY
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -78,7 +67,7 @@ const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
           />
         </span>
         <EditForm
-          profileData={profileData}
+          profileData={profile}
           editable={editable}
           selectedImage={selectedImage}
           setSelectedImage={setSelectedImage}

@@ -26,11 +26,12 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
     const body = await req.json();
-    const { phone, email, address } = body;
-    const update = { phone, email, address };
+    const { newPic, phone, email, address } = body;
+    const update = { pic: newPic, phone, email, address };
+
     const options = {
       new: true,
-      select: { phone, email, address },
+      select: { newPic, phone, email, address },
     }
 
     const res = await User.findByIdAndUpdate(userId, update, options);
