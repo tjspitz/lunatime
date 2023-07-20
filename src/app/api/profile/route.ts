@@ -7,8 +7,8 @@ export async function GET(req: NextRequest) {
     await mongo();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
-    const dates = await User.findById(userId, '-dates');
-    return NextResponse.json(dates);
+    const profile = await User.findById(userId, '-dates');
+    return NextResponse.json(profile);
   } catch (error) {
     return NextResponse.json(error);
   }
