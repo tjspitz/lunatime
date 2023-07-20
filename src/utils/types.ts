@@ -1,4 +1,4 @@
-export interface CycleDates {
+export type CycleDates = {
   _id: string;
   dates: [
     {
@@ -16,13 +16,13 @@ export interface CycleDates {
   ];
 };
 
-export interface ProfileInfo {
+export type ProfileInfo = {
   _id: string;
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-  pic: any;
+  pic: Buffer;
   address: {
     city: string;
     state: string;
@@ -30,17 +30,21 @@ export interface ProfileInfo {
   };
 };
 
+export type PatchedInfo =
+  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
+    newPic: Buffer;
+  };
+
 export type GetCycles = (id: string) => Promise<CycleDates>;
 
 export type GetProfile = (id: string) => Promise<ProfileInfo>;
 
 export type PatchProfile = (
   id: string,
-  // data: FormData
   data: {
     [k: string]: FormDataEntryValue;
   }
-) => Promise<any>; // TODO
+) => Promise<PatchedInfo>;
 
 export type ReqOptions = {
   [k: string]: RequestCache;
