@@ -1,4 +1,5 @@
 import { CycleDates, GetCycles, ProfileInfo } from '@/utils/types';
+import CalActionModal from '../components/CalActionModal';
 import CalendarContainer from './calendar';
 
 const getCycles: GetCycles = async (id) => {
@@ -34,6 +35,7 @@ const CalendarPage = async () => {
       <div className="m-8 flex justify-center">
         <CalendarContainer dates={dates} />
       </div>
+      <div id='modal'><CalActionModal /></div>
     </main>
   );
 };

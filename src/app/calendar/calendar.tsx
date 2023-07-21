@@ -86,8 +86,14 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
 
   const handleChange = (newDate: Date): void => {
     console.log('selected range: ', newDate);
-
     setValue(newDate);
+
+    /*
+    modal: what would you like to do?
+    - set this as a fertile/pms/menstrual date
+    - add a note to this date
+    - nothing (x)
+    */
   };
 
   const tileClassName = ({ date, view }: { date: Date; view: String }): string => {
@@ -118,7 +124,7 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
         calendarType="US"
         view="month"
         minDetail="year"
-        selectRange={true}
+        // selectRange={true}
         value={value}
         onChange={handleChange}
       />
