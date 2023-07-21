@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-
-import './globals.css';
 import Link from 'next/link';
 import { Nunito } from 'next/font/google';
+import { styles } from '@/utils/styles';
+import './globals.css';
 
 const inter = Nunito({
   subsets: ['latin'],
@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-b from-yellow-50 to-yellow-200`}>
+      <body className={inter.className + styles.primaryBg}>
         {children}
         <NavBar />
       </body>
@@ -33,25 +33,25 @@ export function NavBar() {
   return (
     <div className="flex text-med items-center justify-between mx-12">
       <Link
-        className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
+        className={styles.button + styles.hoverSm}
         href="./"
       >
         Logout
       </Link>
       <Link
-        className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
+        className={styles.button + styles.hoverSm}
         href="./calendar"
       >
         Calendar
       </Link>
       <Link
-        className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
+        className={styles.button + styles.hoverSm}
         href="./profile"
       >
         Profile
       </Link>
       <Link
-        className="border-solid border-2 bg-red-100 rounded-md border-red-400 p-2 m-2"
+        className={styles.button + styles.hoverSm}
         href="./stats"
       >
         Stats
