@@ -16,7 +16,7 @@
 ### Backend
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![mongoDB](https://img.shields.io/badge/mongoDB-001E2B?style=for-the-badge&logo=mongodb&logoColor=green)
-![mongoDB](https://img.shields.io/badge/mongoose-EEE?style=for-the-badge&logo=mongoose&logoColor=880000)
+![mongoose](https://img.shields.io/badge/mongoose-EEE?style=for-the-badge&logo=mongoose&logoColor=880000)
 
 
 ---
