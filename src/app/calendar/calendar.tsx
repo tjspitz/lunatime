@@ -2,6 +2,9 @@
 import 'react-calendar/dist/Calendar.css';
 import styles from './styles.module.css';
 import Calendar from 'react-calendar';
+import CalActionModal from '../components/CalActionModal';
+import CalNoteModal from '../components/CalNoteModal';
+import CalEventModal from '../components/CalEventModal';
 import { CycleDates } from '@/utils/types';
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -83,20 +86,22 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   const [menstrualRanges, setMenstrualRanges] = useState(
     rangesToStyle(dates, 'mStart', 'mEnd')
   );
+  const [showActionModal, setShowActionModal] = useState<boolean>(false);
+  const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
+  const [showEventModal, setShowEventModal] = useState<boolean>(false);
 
   const handleChange = (newDate: Date): void => {
-    console.log('selected range: ', newDate);
     setValue(newDate);
-
-    /*
-    modal: what would you like to do?
-    - set this as a fertile/pms/menstrual date
-    - add a note to this date
-    - nothing (x)
-    */
+    setShowActionModal(true);
   };
 
-  const tileClassName = ({ date, view }: { date: Date; view: String }): string => {
+  const tileClassName = ({
+    date,
+    view,
+  }: {
+    date: Date;
+    view: String;
+  }): string => {
     let style = 'min-h-[10vh] text-med';
 
     if (view === 'month') {
@@ -128,6 +133,30 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
         value={value}
         onChange={handleChange}
       />
+      <div id="action-modal">
+        <CalActionModal
+          choseDate={value}
+          showActionModal={showActionModal}
+          setShowActionModal={setShowActionModal}
+          setShowNoteModal={setShowNoteModal}
+          setShowEventModal={setShowEventModal}
+        />
+      </div>
+      <div id='note-modal'>
+        <CalNoteModal
+          choseDate={value}
+          showNoteModal={showNoteModal}
+          setShowNoteModal={setShowNoteModal}
+
+        />
+      </div>
+      <div id='event-modal'>
+        <CalEventModal
+          choseDate={value}
+          showEventModal={showEventModal}
+          setShowEventModal={setShowEventModal}
+        />
+      </div>
     </main>
   );
 };
