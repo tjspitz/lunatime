@@ -77,13 +77,13 @@ const rangesToStyle = (
 const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   const [cycleDates, setCycleDates] = useState(dates);
   const [value, setValue] = useState(new Date());
-  const [fertileRanges, setFertileRanges] = useState(
+  const [fertileRanges, setFertileRanges] = useState<Date[][]>(
     rangesToStyle(dates, 'fStart', 'fEnd')
   );
-  const [pmsRanges, setPmsRanges] = useState(
+  const [pmsRanges, setPmsRanges] = useState<Date[][]>(
     rangesToStyle(dates, 'pStart', 'pEnd')
   );
-  const [menstrualRanges, setMenstrualRanges] = useState(
+  const [menstrualRanges, setMenstrualRanges] = useState<Date[][]>(
     rangesToStyle(dates, 'mStart', 'mEnd')
   );
   const [showActionModal, setShowActionModal] = useState<boolean>(false);
@@ -135,11 +135,16 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
       />
       <div id="action-modal">
         <CalActionModal
-          choseDate={value}
+          date={value}
+          cycleDates={cycleDates}
           showActionModal={showActionModal}
           setShowActionModal={setShowActionModal}
           setShowNoteModal={setShowNoteModal}
           setShowEventModal={setShowEventModal}
+          fertileRanges={fertileRanges}
+          pmsRanges={pmsRanges}
+          menstrualRanges={menstrualRanges}
+          isWithinRanges={isWithinRanges}
         />
       </div>
       <div id='note-modal'>
