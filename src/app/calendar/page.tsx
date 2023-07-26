@@ -1,11 +1,12 @@
-import { CycleDates, GetCycles } from '@/utils/types';
+import { CycleDates, GetCycles, ReqOptions } from '@/utils/types';
 import CalendarContainer from './calendar';
 
 const getCycles: GetCycles = async (id) => {
   try {
     const url = 'http://localhost:3000/api/calendar';
     const params = new URLSearchParams({ userId: id });
-    const res = await fetch(`${url}?${params}`);
+    const options: ReqOptions = { cache: 'no-store' };
+    const res = await fetch(`${url}?${params}`, options);
     return res.json();
   } catch (error: any) {
     console.error(error);
