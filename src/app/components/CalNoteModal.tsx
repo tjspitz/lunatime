@@ -1,6 +1,6 @@
 'use client';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { styles } from '@/utils/styles';
+import { defaultStyles } from '@/utils/defaultStyles';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#note-modal');

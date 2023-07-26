@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Nunito } from 'next/font/google';
-import { styles } from '@/utils/styles';
+import { defaultStyles } from '@/utils/defaultStyles';
 import './globals.css';
 
 const inter = Nunito({
@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className + styles.primaryBg}>
+      <body className={inter.className + defaultStyles.primaryBg}>
         {children}
         <NavBar />
       </body>
@@ -33,25 +33,25 @@ export function NavBar() {
   return (
     <div className="flex text-med items-center justify-between mx-12">
       <Link
-        className={styles.button + styles.hoverSm}
+        className={defaultStyles.button + defaultStyles.hoverSm}
         href="./"
       >
         Logout
       </Link>
       <Link
-        className={styles.button + styles.hoverSm}
+        className={defaultStyles.button + defaultStyles.hoverSm}
         href="./calendar"
       >
         Calendar
       </Link>
       <Link
-        className={styles.button + styles.hoverSm}
+        className={defaultStyles.button + defaultStyles.hoverSm}
         href="./profile"
       >
         Profile
       </Link>
       <Link
-        className={styles.button + styles.hoverSm}
+        className={defaultStyles.button + defaultStyles.hoverSm}
         href="./stats"
       >
         Stats

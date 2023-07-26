@@ -1,6 +1,6 @@
 'use client';
 import { Dispatch, SetStateAction } from 'react';
-import { styles } from '@/utils/styles';
+import { defaultStyles } from '@/utils/defaultStyles';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#action-modal');
@@ -40,13 +40,13 @@ const CalActionModal = ({
       >
         <h1 className="text-xl mb-6">Would you like to...</h1>
         <button
-          className={styles.button + styles.hoverSm}
+          className={defaultStyles.button + defaultStyles.hoverSm}
           onClick={handleChoice}
         >
           Add a Note
         </button>
         <button
-          className={styles.button + styles.hoverSm}
+          className={defaultStyles.button + defaultStyles.hoverSm}
           onClick={handleChoice}
         >
           Record an Event
