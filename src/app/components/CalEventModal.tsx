@@ -1,7 +1,8 @@
 'use client';
-import { Dispatch, SetStateAction } from 'react';
-import { defaultStyles } from '@/utils/defaultStyles';
 import Modal from 'react-modal';
+import { Dispatch, SetStateAction } from 'react';
+import { CycleDates } from '@/utils/types';
+import { defaultStyles } from '@/utils/defaultStyles';
 
 Modal.setAppElement('#event-modal');
 
@@ -23,7 +24,7 @@ const CalEventModal = ({
         className="w-3/4 border-2 border-black bg-white rounded-xl p-8"
       >
         <h1 className="text-xl mb-6">Here&apos;s an event (modal)...</h1>
-        <p>Event on {choseDate.toString()}</p>
+        <p>Event on {choseDate.toDateString()}</p>
       </Modal>
     </div>
   );

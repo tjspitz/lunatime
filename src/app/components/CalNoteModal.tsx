@@ -34,7 +34,7 @@ const CalNoteModal = ({
       >
         <h1 className="text-xl mb-6">Enter a Note (modal)...</h1>
         <label>
-          Add a note for {choseDate.toString()}...
+          Add a note for {choseDate.toDateString()}...
           <textarea
             name="newNote"
             rows={6}
