@@ -1,5 +1,5 @@
 'use client';
-import { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState  } from 'react';
 import { defaultStyles } from '@/utils/defaultStyles';
 import { CycleDates } from '@/utils/types';
 import Modal from 'react-modal';
@@ -30,9 +30,7 @@ const CalActionModal = ({
   isWithinRanges: (date: Date, ranges: Date[][]) => boolean;
 }) => {
   const { dates } = cycleDates;
-  const [chosenDate, setChosenDate] = useState<Date>(new Date());
   const [finalDate, setFinalDate] = useState<Date>(new Date());
-  useEffect(() => setChosenDate(date), [date]);
   useEffect(() => setFinalDate(dates[dates.length - 1].cycle.mEnd || new Date()), [dates]);
 
   const handleChoice = (e: any): void => {
@@ -48,10 +46,10 @@ const CalActionModal = ({
 
   const showEventPrompt = (): boolean => {
     if (
-      chosenDate <= finalDate &&
-      (isWithinRanges(chosenDate, fertileRanges) ||
-        isWithinRanges(chosenDate, pmsRanges) ||
-        isWithinRanges(chosenDate, menstrualRanges))
+      date <= finalDate &&
+      (isWithinRanges(date, fertileRanges) ||
+        isWithinRanges(date, pmsRanges) ||
+        isWithinRanges(date, menstrualRanges))
     ) {
       return true;
     }
@@ -63,8 +61,8 @@ const CalActionModal = ({
       <Modal
         isOpen={showActionModal}
         onRequestClose={() => setShowActionModal(false)}
-        overlayClassName="bg-[rgba(0,0,0,.4] flex justify-center items-center absolute top-0 left-0 h-screen w-screen"
-        className="w-3/4 border-2 border-black bg-white rounded-xl p-8"
+        overlayClassName={defaultStyles.modalOverlay}
+        className={defaultStyles.modalStyle}
       >
         <h1 className="text-xl mb-6">Would you like to...</h1>
         <button

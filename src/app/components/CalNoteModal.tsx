@@ -6,11 +6,11 @@ import Modal from 'react-modal';
 Modal.setAppElement('#note-modal');
 
 const CalNoteModal = ({
-  choseDate,
+  date,
   showNoteModal,
   setShowNoteModal,
 }: {
-  choseDate: Date;
+  date: Date;
   showNoteModal: boolean;
   setShowNoteModal: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -29,12 +29,12 @@ const CalNoteModal = ({
       <Modal
         isOpen={showNoteModal}
         onRequestClose={handleClose}
-        overlayClassName="bg-[rgba(0,0,0,.4] flex justify-center items-center absolute top-0 left-0 h-screen w-screen"
-        className="w-3/4 border-2 border-black bg-white rounded-xl p-8"
+        overlayClassName={defaultStyles.modalOverlay}
+        className={defaultStyles.modalStyle}
       >
         <h1 className="text-xl mb-6">Enter a Note (modal)...</h1>
         <label>
-          Add a note for {choseDate.toDateString()}...
+          Add a note for {date.toDateString()}...
           <textarea
             name="newNote"
             rows={6}

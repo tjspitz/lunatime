@@ -75,7 +75,7 @@ const rangesToStyle = (
 };
 
 const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
-  const [cycleDates, setCycleDates] = useState(dates);
+  const [cycleDates, setCycleDates] = useState<CycleDates>(dates);
   const [value, setValue] = useState(new Date());
   const [fertileRanges, setFertileRanges] = useState<Date[][]>(
     rangesToStyle(dates, 'fStart', 'fEnd')
@@ -89,6 +89,8 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   const [showActionModal, setShowActionModal] = useState<boolean>(false);
   const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
   const [showEventModal, setShowEventModal] = useState<boolean>(false);
+
+  // useEffect(() => setValue(value), [value]);
 
   const handleChange = (newDate: Date): void => {
     setValue(newDate);
@@ -149,17 +151,19 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
       </div>
       <div id='note-modal'>
         <CalNoteModal
-          choseDate={value}
+          date={value}
           showNoteModal={showNoteModal}
           setShowNoteModal={setShowNoteModal}
-
         />
       </div>
       <div id='event-modal'>
         <CalEventModal
-          choseDate={value}
+          date={value}
+          cycleDates={cycleDates}
+          setCycleDates={setCycleDates}
           showEventModal={showEventModal}
           setShowEventModal={setShowEventModal}
+          isWithinRange={isWithinRange}
         />
       </div>
     </main>
