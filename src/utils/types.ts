@@ -30,14 +30,20 @@ export type ProfileInfo = {
   };
 };
 
-export type PatchedInfo =
-  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
-    newPic: Buffer;
-  };
+export type RangeData = {
+  index: number;
+  type: string;
+  range: Date[];
+}
 
 export type GetCycles = (id: string) => Promise<CycleDates>;
 
 export type GetProfile = (id: string) => Promise<ProfileInfo>;
+
+export type PatchedInfo =
+  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
+    newPic: Buffer;
+  };
 
 export type PatchProfile = (
   id: string,
