@@ -36,9 +36,9 @@ const CalActionModal = ({
   const handleChoice = (e: any): void => {
     e.preventDefault();
     const choice = e.target.innerText;
-    if (choice === 'Add a Note') {
+    if (choice.includes('Note')) {
       setShowNoteModal(true);
-    } else if (choice === 'Record an Event') {
+    } else if (choice.includes('Event')) {
       setShowEventModal(true);
     }
     setShowActionModal(false);
@@ -69,14 +69,14 @@ const CalActionModal = ({
           className={defaultStyles.button + defaultStyles.hoverSm}
           onClick={handleChoice}
         >
-          Add a note
+          Add a Note
         </button>
         {showEventPrompt() && (
           <button
             className={defaultStyles.button + defaultStyles.hoverSm}
             onClick={handleChoice}
           >
-            Add or Edit an event
+            Add or Edit an Event
           </button>
         )}
       </Modal>
