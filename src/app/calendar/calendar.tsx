@@ -20,8 +20,17 @@ const isWithinRange = (date: Date, range: Date[]): boolean => {
    * as well as other resources
    * tl;dr - the following 2 lines make it work as desired
    */
-  const start = new Date(range[0]);
-  start.setDate(start.getDate() - 1);
+  const start = range[0];
+  // start.setDate(start.getDate() - 1);
+  /*
+  * interestingly enough, the above is now in question
+  * after implementing the editing functionality for dates
+  * 'seeded' cycles rely on it for proper styling, however
+  * 'real' cycles need it removed, otherwise the backdating
+  * will style one tile too far back on said 'real' dates,
+  * and removing the second line results in proper styling
+  * tl;dr - life is hard
+  */
 
   return isWithinInterval(date, {
     start,
@@ -90,8 +99,6 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
   const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
   const [showEventModal, setShowEventModal] = useState<boolean>(false);
 
-  // useEffect(() => setValue(value), [value]);
-
   const handleChange = (newDate: Date): void => {
     setValue(newDate);
     setShowActionModal(true);
@@ -131,7 +138,6 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
         calendarType="US"
         view="month"
         minDetail="year"
-        // selectRange={true}
         value={value}
         onChange={handleChange}
       />

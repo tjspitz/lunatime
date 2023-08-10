@@ -3,10 +3,26 @@ import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import Modal from 'react-modal';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { CycleDates, RangeData } from '@/utils/types';
+import { CycleDates, PutCycles, RangeData } from '@/utils/types';
 import { defaultStyles } from '@/utils/defaultStyles';
 
 Modal.setAppElement('#event-modal');
+
+const putCycles: PutCycles = async (id, dates) => {
+  try {
+    const url = 'http://localhost:3000/api/calendar';
+    const params = new URLSearchParams({ userId: id });
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify(dates),
+    };
+    const res = await fetch(`${url}?${params}`, options);
+    return res.json();
+  } catch (error: any) {
+    console.error(error);
+    return {} as CycleDates;
+  }
+};
 
 const defaultRange: RangeData = {
   index: -1,
@@ -33,15 +49,7 @@ const CalEventModal = ({
   const [newRange, setNewRange] = useState<RangeData>(defaultRange);
   useEffect(() => setCurrentRange(findRange()), [date]);
   useEffect(() => setNewRange(currentRange), [currentRange]);
-  /*
-    [x] detect specific date range that `date` resides in
-      [x] search corresponding props
-      [x] once found, apply that specific range to a state
-    [x] show a mini-calendar to pick a new range from
-      [x] set the new range to a state
-      [] confirm/save changes (PATCH)
-      [] style the mini-calendar nicely
-  */
+
   const findRange = (): RangeData => {
     const today = date;
     const { dates } = cycleDates;
@@ -67,7 +75,7 @@ const CalEventModal = ({
       if (isWithinRange(today, [cycle.mStart, cycle.mEnd])) {
         return {
           index: i,
-          type: 'menstruation',
+          type: 'menstrual',
           range: [cycle.mStart, cycle.mEnd],
         };
       }
@@ -83,6 +91,19 @@ const CalEventModal = ({
     });
   };
 
+  const handleSaveClick = () => {
+    const i = newRange.index;
+    const start = newRange.type[0] + 'Start';
+    const end = newRange.type[0] + 'End';
+    const newCycles = { ...cycleDates };
+    newCycles.dates[i].cycle[start] = newRange.range[0];
+    newCycles.dates[i].cycle[end] = newRange.range[1];
+
+    putCycles(cycleDates._id, newCycles);
+    setCycleDates(newCycles);
+    setShowEventModal(false);
+  };
+
   return (
     <div className="m-8 p-8 flex justify-center items-center">
       <Modal
@@ -91,7 +112,15 @@ const CalEventModal = ({
         overlayClassName={defaultStyles.modalOverlay}
         className={defaultStyles.modalStyle}
       >
-        <h1 className="text-xl mb-6">Editing {date.toDateString()}...</h1>
+        <div className="flex justify-between">
+          <h1 className="text-xl mb-6">Editing {date.toDateString()}...</h1>
+          <button
+            className={`self-start text-lg text-gray-500 ${defaultStyles.hoverMed} hover:text-red-400`}
+            onClick={() => setShowEventModal(false)}
+          >
+            X
+          </button>
+        </div>
         <p className="text-med mb-2">
           Please choose a new range of dates for this {currentRange.type} event:
         </p>
@@ -101,9 +130,15 @@ const CalEventModal = ({
           view="month"
           minDetail="month"
           selectRange={true}
-          value={date}
+          value={currentRange[0]} // TODO: works like a meme, but fix?
           onChange={handleChange}
         />
+        <button
+          className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded-md ${defaultStyles.hoverMed}`}
+          onClick={handleSaveClick}
+        >
+          Save
+        </button>
       </Modal>
     </div>
   );
