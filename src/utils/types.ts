@@ -43,7 +43,9 @@ export type GetProfile = (id: string) => Promise<ProfileInfo>;
 export type PatchedInfo =
   Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
     newPic: Buffer;
-  };
+};
+
+export type PutCycles = (id: string, dates: CycleDates) => Promise<any>;
 
 export type PatchProfile = (
   id: string,
