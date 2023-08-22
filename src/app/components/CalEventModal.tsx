@@ -47,6 +47,8 @@ const CalEventModal = ({
 }) => {
   const [currentRange, setCurrentRange] = useState<RangeData>(defaultRange);
   const [newRange, setNewRange] = useState<RangeData>(defaultRange);
+  const [value, setValue] = useState(date);
+
   useEffect(() => setCurrentRange(findRange()), [date]);
   useEffect(() => setNewRange(currentRange), [currentRange]);
 
@@ -83,15 +85,17 @@ const CalEventModal = ({
     return {} as RangeData;
   };
 
-  const handleChange = (dateRange: Date[]): void => {
+  const handleChange = (newDate: Date): void => {
+    setValue(newDate);
     setNewRange({
       index: currentRange.index,
       type: currentRange.type,
-      range: dateRange,
+      range: newDate, // TODO
     });
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = (e: any): void => {
+    e.preventDefault();
     const i = newRange.index;
     const start = newRange.type[0] + 'Start';
     const end = newRange.type[0] + 'End';
@@ -104,11 +108,16 @@ const CalEventModal = ({
     setShowEventModal(false);
   };
 
+  const handleModalClose = (e: any): void => {
+    e.preventDefault();
+    setShowEventModal(false);
+  };
+
   return (
     <div className="m-8 p-8 flex justify-center items-center">
       <Modal
         isOpen={showEventModal}
-        onRequestClose={() => setShowEventModal(false)}
+        onRequestClose={handleModalClose}
         overlayClassName={defaultStyles.modalOverlay}
         className={defaultStyles.modalStyle}
       >
@@ -116,7 +125,7 @@ const CalEventModal = ({
           <h1 className="text-xl mb-6">Editing {date.toDateString()}...</h1>
           <button
             className={`self-start text-lg text-gray-500 ${defaultStyles.hoverMed} hover:text-red-400`}
-            onClick={() => setShowEventModal(false)}
+            onClick={handleModalClose}
           >
             X
           </button>
@@ -130,7 +139,7 @@ const CalEventModal = ({
           view="month"
           minDetail="month"
           selectRange={true}
-          value={currentRange[0]} // TODO: works like a meme, but fix?
+          value={date} // need some styling a la tileClassName
           onChange={handleChange}
         />
         <button
