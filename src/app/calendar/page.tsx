@@ -16,24 +16,18 @@ const getCycles: GetCycles = async (id) => {
 
 const CalendarPage = async () => {
   const userId = '6485475f06277f54cae53e51'; // testing 'Olivia'
-  const dates: CycleDates = await getCycles(userId);
-  dates.dates.forEach((entry) => {
+  const data: CycleDates = await getCycles(userId);
+  data.dates.forEach((entry) => {
     const { cycle } = entry;
     for (const day in cycle) {
-      cycle[day] = new Date(cycle[day])
+      cycle[day] = new Date(cycle[day]);
     }
   });
 
   return (
     <main>
-      <p className="text-2xl">
-        Hi, this is the Calendar page.
-      </p>
-      <p className="text-2xl">
-        This is the main part of the app.
-      </p>
       <div className="m-8 flex justify-center">
-        <CalendarContainer dates={dates} />
+        <CalendarContainer dates={data} />
       </div>
     </main>
   );
