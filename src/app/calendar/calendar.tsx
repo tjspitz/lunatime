@@ -10,28 +10,7 @@ import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 const isWithinRange = (date: Date, range: Date[]): boolean => {
-  /*
-   * seems like a workaround to a bug that should not exist...
-   * backdating the start date by one day,
-   * since if we start at the initial range - range[0],
-   * isWithinInterval will not validate range[0],
-   * this despite a lot of time invested trying to prove that
-   * starting at range[0] was correctly following date-fns documentation
-   * as well as other resources
-   * tl;dr - the following 2 lines make it work as desired
-   */
   const start = range[0];
-  // start.setDate(start.getDate() - 1);
-  /*
-  * interestingly enough, the above is now in question
-  * after implementing the editing functionality for dates
-  * 'seeded' cycles rely on it for proper styling, however
-  * 'real' cycles need it removed, otherwise the backdating
-  * will style one tile too far back on said 'real' dates,
-  * and removing the second line results in proper styling
-  * tl;dr - life is hard
-  */
-
   return isWithinInterval(date, {
     start,
     end: range[range.length - 1],
@@ -59,45 +38,53 @@ const findRangeBounds = (date: Date, ranges: Date[][]): string | undefined => {
 };
 
 const rangesToStyle = (
-  cycleDates: CycleDates,
+  cycleDates: CycleDates | {},
   start: string,
   end: string
 ): Date[][] => {
   const ranges: Date[][] = [];
-  const { dates } = cycleDates;
-
-  dates.forEach((entry) => {
-    const { cycle } = entry;
-    const subRange: Date[] = [];
-
-    for (const key in cycle) {
-      if (key === start) {
-        subRange.push(cycle[start]);
+  if (cycleDates.hasOwnProperty('dates')) {
+    const { dates } = cycleDates;
+    dates.forEach((entry) => {
+      const { cycle } = entry;
+      const subRange: Date[] = []
+      for (const key in cycle) {
+        if (key === start) {
+          subRange.push(cycle[start]);
+        }
+        if (key === end) {
+          subRange.push(cycle[end]);
+        }
       }
-      if (key === end) {
-        subRange.push(cycle[end]);
-      }
-    }
-    ranges.push(subRange);
-  });
+      ranges.push(subRange);
+    });
+  } else {
+    ranges.push([]);
+  }
   return ranges;
 };
 
-const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
-  const [cycleDates, setCycleDates] = useState<CycleDates>(dates);
+const CalendarContainer = ({ dates }: { dates: CycleDates | {} }) => {
+  const [cycleDates, setCycleDates] = useState<CycleDates>(dates); // TODO
   const [value, setValue] = useState(new Date());
   const [fertileRanges, setFertileRanges] = useState<Date[][]>(
-    rangesToStyle(dates, 'fStart', 'fEnd')
+    rangesToStyle(cycleDates, 'fStart', 'fEnd')
   );
   const [pmsRanges, setPmsRanges] = useState<Date[][]>(
-    rangesToStyle(dates, 'pStart', 'pEnd')
+    rangesToStyle(cycleDates, 'pStart', 'pEnd')
   );
   const [menstrualRanges, setMenstrualRanges] = useState<Date[][]>(
-    rangesToStyle(dates, 'mStart', 'mEnd')
+    rangesToStyle(cycleDates, 'mStart', 'mEnd')
   );
   const [showActionModal, setShowActionModal] = useState<boolean>(false);
   const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
   const [showEventModal, setShowEventModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setFertileRanges(rangesToStyle(cycleDates, 'fStart', 'fEnd'))
+    setPmsRanges(rangesToStyle(cycleDates, 'pStart', 'pEnd'))
+    setMenstrualRanges(rangesToStyle(cycleDates, 'mStart', 'mEnd'))
+  }, [cycleDates])
 
   const handleChange = (newDate: Date): void => {
     setValue(newDate);
@@ -114,17 +101,23 @@ const CalendarContainer = ({ dates }: { dates: CycleDates }) => {
     let style = 'min-h-[10vh] text-med';
 
     if (view === 'month') {
-      if (isWithinRanges(date, fertileRanges)) {
-        style += ' ' + styles.fertile;
-        style += ' ' + styles[findRangeBounds(date, fertileRanges)] || '';
+      if (fertileRanges[0].length) {
+        if (isWithinRanges(date, fertileRanges)) {
+          style += ' ' + styles.fertile;
+          style += ' ' + styles[findRangeBounds(date, fertileRanges)] || '';
+        }
       }
-      if (isWithinRanges(date, pmsRanges)) {
-        style += ' ' + styles.pms;
-        style += ' ' + styles[findRangeBounds(date, pmsRanges)] || '';
+      if (pmsRanges[0].length) {
+        if (isWithinRanges(date, pmsRanges)) {
+          style += ' ' + styles.pms;
+          style += ' ' + styles[findRangeBounds(date, pmsRanges)] || '';
+        }
       }
-      if (isWithinRanges(date, menstrualRanges)) {
-        style += ' ' + styles.menstrual;
-        style += ' ' + styles[findRangeBounds(date, menstrualRanges)] || '';
+      if (menstrualRanges[0].length) {
+        if (isWithinRanges(date, menstrualRanges)) {
+          style += ' ' + styles.menstrual;
+          style += ' ' + styles[findRangeBounds(date, menstrualRanges)] || '';
+        }
       }
     }
     return style;
