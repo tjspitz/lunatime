@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { CycleDates, PutCycles, RangeData } from '@/utils/types';
 import { defaultStyles } from '@/utils/defaultStyles';
 
-Modal.setAppElement('#event-modal');
+Modal.setAppElement('#cal-modal');
 
 const putCycles: PutCycles = async (id, dates) => {
   try {
@@ -114,7 +114,9 @@ const CalEventModal = ({
   };
 
   return (
-    <div className="m-8 p-8 flex justify-center items-center">
+    <div className={
+      `${defaultStyles.modalDiv} ${showEventModal ? '' : 'hidden'}`
+      }>
       <Modal
         isOpen={showEventModal}
         onRequestClose={handleModalClose}

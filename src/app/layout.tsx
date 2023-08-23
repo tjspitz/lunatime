@@ -24,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className + defaultStyles.primaryBg}>
         {children}
         <NavBar />
+        <div id="cal-modal"></div>
       </body>
     </html>
   );

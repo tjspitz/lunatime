@@ -134,7 +134,7 @@ const CalendarContainer = ({ dates }: { dates: CycleDates | {} }) => {
         value={value}
         onChange={handleChange}
       />
-      <div id="action-modal">
+      <div>
         <CalActionModal
           date={value}
           cycleDates={cycleDates}
@@ -148,14 +148,14 @@ const CalendarContainer = ({ dates }: { dates: CycleDates | {} }) => {
           isWithinRanges={isWithinRanges}
         />
       </div>
-      <div id='note-modal'>
+      <div>
         <CalNoteModal
           date={value}
           showNoteModal={showNoteModal}
           setShowNoteModal={setShowNoteModal}
         />
       </div>
-      <div id='event-modal'>
+      <div>
         <CalEventModal
           date={value}
           cycleDates={cycleDates}

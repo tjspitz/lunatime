@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { defaultStyles } from '@/utils/defaultStyles';
 import Modal from 'react-modal';
 
-Modal.setAppElement('#note-modal');
+Modal.setAppElement('#cal-modal');
 
 const CalNoteModal = ({
   date,
@@ -25,7 +25,9 @@ const CalNoteModal = ({
   };
 
   return (
-    <div className="m-8 p-8 flex justify-center items-center">
+    <div className={
+      `${defaultStyles.modalDiv} ${showNoteModal ? '' : 'hidden'}`
+      }>
       <Modal
         isOpen={showNoteModal}
         onRequestClose={handleClose}

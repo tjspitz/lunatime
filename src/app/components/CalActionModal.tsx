@@ -4,7 +4,7 @@ import { defaultStyles } from '@/utils/defaultStyles';
 import { CycleDates } from '@/utils/types';
 import Modal from 'react-modal';
 
-Modal.setAppElement('#action-modal');
+Modal.setAppElement('#cal-modal');
 
 const CalActionModal = ({
   date,
@@ -57,7 +57,9 @@ const CalActionModal = ({
   };
 
   return (
-    <div className="m-8 p-8 flex justify-center items-center">
+    <div className={
+      `${defaultStyles.modalDiv} ${showActionModal ? '' : 'hidden'}`
+      }>
       <Modal
         isOpen={showActionModal}
         onRequestClose={() => setShowActionModal(false)}
