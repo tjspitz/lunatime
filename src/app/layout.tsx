@@ -33,30 +33,15 @@ export default function RootLayout({
 export function NavBar() {
   return (
     <div className="flex text-med items-center justify-between mx-12">
-      <Link
-        className={defaultStyles.button + defaultStyles.hoverSm}
-        href="./"
-      >
-        Logout
-      </Link>
-      <Link
-        className={defaultStyles.button + defaultStyles.hoverSm}
-        href="./calendar"
-      >
-        Calendar
-      </Link>
-      <Link
-        className={defaultStyles.button + defaultStyles.hoverSm}
-        href="./profile"
-      >
-        Profile
-      </Link>
-      <Link
-        className={defaultStyles.button + defaultStyles.hoverSm}
-        href="./stats"
-      >
-        Stats
-      </Link>
+      {['', 'calendar', 'profile', 'stats'].map((route, i) => (
+        <Link
+          key={i + route}
+          className={`${defaultStyles.button} ${defaultStyles.hoverSm} capitalize`}
+          href={'./' + route}
+        >
+          {route.length ? route : 'logout'}
+        </Link>
+      ))}
     </div>
   );
 }
