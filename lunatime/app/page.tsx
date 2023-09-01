@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import Button from '@/components/Button';
 
 export default function Home() {
   return (
@@ -12,9 +13,12 @@ export default function Home() {
           </p>
           <div>
             <Link href="/dashboard">
-              <button className="px-4 py-2 my-4 rounded-xl bg-pink-950 text-pink-50">
+              <Button
+                intent="primary"
+                size="medium"
+              >
                 Get Started
-              </button>
+              </Button>
             </Link>
           </div>
         </div>
