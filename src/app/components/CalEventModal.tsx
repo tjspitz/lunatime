@@ -45,9 +45,10 @@ const CalEventModal = ({
   setShowEventModal: Dispatch<SetStateAction<boolean>>;
   isWithinRange: (date: Date, range: Date[]) => boolean;
 }) => {
+  const [value, setValue] = useState(date);
   const [currentRange, setCurrentRange] = useState<RangeData>(defaultRange);
   const [newRange, setNewRange] = useState<RangeData>(defaultRange);
-  const [value, setValue] = useState(date);
+  const [newEventType, setNewEventType] = useState<string>('');
 
   useEffect(() => setCurrentRange(findRange()), [date]);
   useEffect(() => setNewRange(currentRange), [currentRange]);
@@ -89,7 +90,7 @@ const CalEventModal = ({
     setValue(newDate);
     setNewRange({
       index: currentRange.index,
-      type: currentRange.type,
+      type: currentRange.type || newEventType,
       range: newDate, // TODO
     });
   };
@@ -102,7 +103,6 @@ const CalEventModal = ({
     const newCycles = { ...cycleDates };
     newCycles.dates[i].cycle[start] = newRange.range[0];
     newCycles.dates[i].cycle[end] = newRange.range[1];
-
     putCycles(cycleDates._id, newCycles);
     setCycleDates(newCycles);
     setShowEventModal(false);
@@ -110,7 +110,14 @@ const CalEventModal = ({
 
   const handleModalClose = (e: any): void => {
     e.preventDefault();
+    setNewRange(defaultRange);
+    setNewEventType('');
     setShowEventModal(false);
+  };
+
+  const handleTypeClick = (e: any): void => {
+    e.preventDefault();
+    setNewEventType(e.target.innerText);
   };
 
   return (
@@ -132,18 +139,47 @@ const CalEventModal = ({
             X
           </button>
         </div>
-        <p className="text-med mb-2">
-          Please choose a new range of dates for this {currentRange.type} event:
-        </p>
-        <Calendar
-          className={'min-w-fit'}
-          calendarType="US"
-          view="month"
-          minDetail="month"
-          selectRange={true}
-          value={date} // need some styling a la tileClassName
-          onChange={handleChange}
-        />
+        {currentRange.type ? (
+          <>
+            <p className="text-med mb-2">
+              Please choose a new range of dates for this {currentRange.type} event:
+            </p>
+            <Calendar
+              className={'min-w-fit'}
+              calendarType="US"
+              view="month"
+              minDetail="month"
+              selectRange={true}
+              value={date} // need some styling a la tileClassName
+              onChange={handleChange}
+            />
+          </>
+        ) : (
+          <>
+            <p className="text-med mb-2">
+              Creating a new {newEventType} event:
+            </p>
+            {['Fertility', 'Pre-Menstrual', 'Menstruation'].map((text, i) => (
+              <button
+                key={i + text}
+                className={`${defaultStyles.button} ${defaultStyles.hoverSm} focus:ring focus:ring-red-900`}
+                onClick={handleTypeClick}
+              >
+                {text}
+              </button>
+            ))}
+            <Calendar
+              className={'min-w-fit'}
+              calendarType="US"
+              view="month"
+              minDetail="month"
+              selectRange={false}
+              value={value}
+              onChange={handleChange}
+            />
+          </>
+        )
+        }
         <button
           className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded-md ${defaultStyles.hoverMed}`}
           onClick={handleSaveClick}

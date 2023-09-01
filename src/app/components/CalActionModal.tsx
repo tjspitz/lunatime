@@ -2,6 +2,7 @@
 import { Dispatch, SetStateAction, useEffect, useState  } from 'react';
 import { defaultStyles } from '@/utils/defaultStyles';
 import { CycleDates } from '@/utils/types';
+import { add } from 'date-fns';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#cal-modal');
@@ -31,7 +32,23 @@ const CalActionModal = ({
 }) => {
   const { dates } = cycleDates;
   const [finalDate, setFinalDate] = useState<Date>(new Date());
-  useEffect(() => setFinalDate(dates[dates.length - 1].cycle.mEnd || new Date()), [dates]);
+
+  useEffect(() => {
+    const lastCycle = dates[dates.length - 1].cycle;
+    let lastFound;
+
+    if (lastCycle.mEnd) {
+      lastFound = lastCycle.mEnd;
+    } else if (lastCycle.pEnd) {
+      lastFound = lastCycle.pEnd;
+    } else if (lastCycle.fEnd) {
+      lastFound = lastCycle.fEnd;
+    } else {
+      lastFound = new Date();
+    }
+
+    setFinalDate(lastFound);
+  }, [dates]);
 
   const handleChoice = (e: any): void => {
     e.preventDefault();
@@ -45,9 +62,10 @@ const CalActionModal = ({
   };
 
   const showEventPrompt = (): boolean => {
-    if (
-      date <= finalDate &&
-      (isWithinRanges(date, fertileRanges) ||
+    if (date >= add(finalDate, { days: 7 })) {
+      return true;
+    }
+    if ((isWithinRanges(date, fertileRanges) ||
         isWithinRanges(date, pmsRanges) ||
         isWithinRanges(date, menstrualRanges))
     ) {

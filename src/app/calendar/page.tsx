@@ -26,7 +26,7 @@ const CalendarPage = async () => {
 
   return (
     <main>
-      <div className="m-8 flex justify-center">
+      <div className="flex justify-center m-8">
         <CalendarContainer dates={data} />
       </div>
     </main>
