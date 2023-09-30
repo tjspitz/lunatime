@@ -3,12 +3,13 @@ import { FC } from 'react';
 
 const inputClasses = cva(
   [
-    'rounded-2xl',
     'border-transparent',
     'border-2',
-    'border-pink-950',
     'focus:border-solid',
-    'w-full',
+    'rounded-3xl',
+    'px-8',
+    'py-2',
+    'max-w-[400px]'
   ],
   {
     variants: {
