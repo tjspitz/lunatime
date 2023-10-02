@@ -3,8 +3,8 @@ import cycleSchema from './cycleModel.js';
 import notesSchema from './notesSchema.js';
 
 const userSchema = new mongoose.Schema({
-  createdAt: Date,
-  lastEdited: Date,
+  createdAt: { type: Date, default: Date.now },
+  lastEdited: { type: Date, default: Date.now },
   firstName: String,
   lastName: String,
   phone: String,
@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   pic: Buffer,
-  cycleLength: Number,
-  menstrualLength: Number,
+  cycleLength: { type: Number, default: 30 },
+  menstrualLength: { type: Number, default: 5 },
   address: {
     city: String,
     state: String,

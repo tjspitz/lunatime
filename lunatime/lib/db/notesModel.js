@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const notesSchema = new mongoose.Schema({
-  createdAt: Date,
-  lastEdited: Date,
+  createdAt: { type: Date, default: Date.now },
+  lastEdited: { type: Date, default: Date.now },
   note: String,
 });
 

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const cycleSchema = new mongoose.Schema({
-  createdAt: Date,
-  lastEdited: Date,
+  createdAt: { type: Date, default: Date.now },
+  lastEdited: { type: Date, default: Date.now },
   cycleLength: Number,
   menstrualLength: Number,
   fertileRange: [Date, Date],
