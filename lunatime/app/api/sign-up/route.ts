@@ -2,20 +2,19 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import User from '@/lib/db/userModel';
 import { createJWT, hashPwd } from '@/lib/auth';
 import { serialize } from 'cookie';
-import { cookies } from 'next/headers';
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   const user = await User.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    phone: req.body.phone,
+    // phone: req.body.phone,
     email: req.body.email,
     username: req.body.username,
     password: await hashPwd(req.body.password),
-    pic: req.body.pic,
-    cycleLength: req.body.cycleLength,
-    menstrualLength: req.body.menstrualLength,
-    address: req.body.address,
+    // pic: req.body.pic,
+    // cycleLength: req.body.cycleLength,
+    // menstrualLength: req.body.menstrualLength,
+    // address: req.body.address,
   });
 
   const jwt = await createJWT(user);
@@ -29,7 +28,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     }),
   );
   res.status(201);
-  res.end();
+  res.json({});
 }
 
 /*

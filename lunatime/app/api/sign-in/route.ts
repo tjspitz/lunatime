@@ -9,10 +9,9 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
   if (!user) {
     res.status(401);
     res.json({ error: 'User not found' });
-    return res;
   }
 
-  const isUser = await comparePwds(req.body.password, user.password as string);
+  const isUser = await comparePwds(req.body.password, user?.password as string);
 
   if (isUser) {
     const jwt = await createJWT(user);
@@ -26,10 +25,10 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
       }),
     );
     res.status(201);
-    return res;
+    res.json({});
   } else {
     res.status(401);
     res.json({ error: 'Username and password do not match' });
-    return res;
+    res.json({});
   }
 }
