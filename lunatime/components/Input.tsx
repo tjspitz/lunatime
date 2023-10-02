@@ -40,6 +40,7 @@ export interface InputProps
   extends React.HTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputClasses> {
       required?: boolean;
+      type?: string | undefined;
       value?: string;
     }
 

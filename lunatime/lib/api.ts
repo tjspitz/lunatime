@@ -20,7 +20,7 @@ const fetcher = async ({ url, method, body, json = true }) => {
 export const signUp = async (user) => {
   return fetcher({
     url: '/api/sign-up',
-    method: 'post',
+    method: 'POST',
     body: user,
   });
 };
@@ -28,7 +28,7 @@ export const signUp = async (user) => {
 export const signIn = async (user) => {
   return fetcher({
     url: '/api/sign-in',
-    method: 'post',
+    method: 'GET',
     body: user,
   });
 };

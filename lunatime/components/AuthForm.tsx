@@ -23,14 +23,15 @@ const signInContent = {
 };
 
 const initialState = {
-  email: '',
-  password: '',
   firstName: '',
   lastName: '',
+  email: '',
+  password: '',
 };
 
 const AuthForm = ({ mode }: { mode: string; }) => {
   const [form, setForm] = useState({ ...initialState });
+  const [hidePwd, setHidePWd] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -124,6 +125,7 @@ const AuthForm = ({ mode }: { mode: string; }) => {
               intent='primary'
               size='medium'
               required
+              type={hidePwd ? 'password' : undefined}
               placeholder='Password'
               value={form.password}
               onChange={handlePasswordChange}
