@@ -1,5 +1,10 @@
+/*
+  TO-DO:
+  * typing
+  * why is signIn a POST method?
+*/
+
 const fetcher = async ({ url, method, body, json = true }) => {
-  let data;
   try {
     const res = await fetch(url, {
       method,
@@ -10,8 +15,11 @@ const fetcher = async ({ url, method, body, json = true }) => {
       },
     });
 
-    data = await res.json();
-    return data.data;
+    if (json) {
+      const data = await res.json();
+      return data.data;
+    }
+
   } catch (error: any) {
     console.error(error);
   }
@@ -28,7 +36,8 @@ export const signUp = async (user) => {
 export const signIn = async (user) => {
   return fetcher({
     url: '/api/sign-in',
-    method: 'GET',
+    method: 'POST',
     body: user,
+    json: false
   });
 };
