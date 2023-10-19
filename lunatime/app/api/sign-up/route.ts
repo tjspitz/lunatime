@@ -1,47 +1,48 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { NextApiResponse } from 'next';
+import mongo from '@/lib/db/dbConfig';
 import User from '@/lib/db/userModel';
 import { createJWT, hashPwd } from '@/lib/auth';
 import { serialize } from 'cookie';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const user = await User.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    // phone: req.body.phone,
-    email: req.body.email,
-    username: req.body.username,
-    password: await hashPwd(req.body.password),
-    // pic: req.body.pic,
-    // cycleLength: req.body.cycleLength,
-    // menstrualLength: req.body.menstrualLength,
-    // address: req.body.address,
-  });
+export async function POST(req: NextRequest, res: NextResponse) {
+  const body = await req.json();
 
-  const jwt = await createJWT(user);
+  try {
+    await mongo();
+  } catch(error) {
+    console.error('Failed to reach MongoDB: \n', error);
+  }
 
-  res.setHeader(
-    'Set-Cookie',
-    serialize(process.env.COOKIE_NAME as string, jwt, {
-      httpOnly: true,
-      path: '/',
-      maxAge: 604800,
-    }),
-  );
-  res.status(201);
-  res.json({});
+  try {
+    const user = await User.create({
+      firstName: body.firstName,
+      lastName: body.lastName,
+      // phone: body.phone,
+      email: body.email,
+      // username: body.username,
+      password: await hashPwd(body.password),
+      // pic: body.pic,
+      // cycleLength: body.cycleLength,
+      // menstrualLength: body.menstrualLength,
+      // address: body.address,
+    });
+
+    const jwt = await createJWT(user);
+
+    const newHeaders = new Headers(req.headers);
+    newHeaders.set(
+      'Set-Cookie',
+      serialize(process.env.COOKIE_NAME as string, jwt, {
+        httpOnly: true,
+        path: '/',
+        maxAge: 604800,
+      }),
+    );
+
+    return NextResponse.json(res);
+
+  } catch(error) {
+    console.error('Failed to complete Registration in POST request: \n', error);
+  }
 }
-
-/*
-  trying to do cookies the Next.js way, but a lot of TypeScript warnings, even with casting...
-
-  res.setHeader(
-    'Set-Cookie',
-    (cookies().set({
-      name: process.env.COOKIE_NAME as string,
-      value: jwt,
-      httpOnly: true,
-      path: '/',
-      maxAge: 604800,
-    }) as unknown) as string[]
-  );
-*/
