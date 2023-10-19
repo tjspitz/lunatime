@@ -10,6 +10,4 @@ const cycleSchema = new mongoose.Schema({
   menstrualRange: [Date, Date],
 });
 
-const Cycle = mongoose.model('Cycle', cycleSchema);
-
 export default cycleSchema;

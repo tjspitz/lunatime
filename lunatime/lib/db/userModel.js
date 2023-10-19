@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import cycleSchema from './cycleModel.js';
-import notesSchema from './notesModel.js';
+import cycleSchema from './cycleModel';
+import noteSchema from './notesModel';
 
 const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema({
     zip: { type: Number, required: false },
   },
   dates: [cycleSchema],
-  notes: [notesSchema],
+  notes: [noteSchema],
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 export default User;
