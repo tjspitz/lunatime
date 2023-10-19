@@ -112,6 +112,7 @@ const AuthForm = ({ mode }: { mode: string; }) => {
               intent='primary'
               size='medium'
               required
+              type='email'
               placeholder='Email'
               value={form.email}
               onChange={handleEmailChange}
@@ -125,7 +126,7 @@ const AuthForm = ({ mode }: { mode: string; }) => {
               intent='primary'
               size='medium'
               required
-              type={hidePwd ? 'password' : undefined}
+              type={hidePwd ? 'password' : 'text'}
               placeholder='Password'
               value={form.password}
               onChange={handlePasswordChange}
