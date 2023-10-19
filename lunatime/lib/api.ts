@@ -15,10 +15,12 @@ const fetcher = async ({ url, method, body, json = true }) => {
       },
     });
 
+    // FLAGGING FOR PAGES VS APP ISSUE
     if (json) {
       const data = await res.json();
       return data.data;
     }
+    // ===============================
 
   } catch (error: any) {
     console.error(error);
