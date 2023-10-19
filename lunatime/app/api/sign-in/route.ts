@@ -3,8 +3,10 @@ import User from '@/lib/db/userModel';
 import { comparePwds, createJWT } from '@/lib/auth';
 import { serialize } from 'cookie';
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const user = await User.findOne(req.body.username);
+// TO-DO: convert to NexRequest, NextRespone (APP)
+// currently using (PAGES) types
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+  const user = await User.findOne(req.body.email);
 
   if (!user) {
     res.status(401);
