@@ -8,19 +8,13 @@ const validateJWT = async (jwt: string) => {
     jwt,
     new TextEncoder().encode(process.env.JWT_SECRET),
   );
-  return payload.payload as any;
+  return payload;
 };
 
 const middleware = async (req: NextRequest, res: NextResponse) => {
   const { pathname } = req.nextUrl;
 
-  if (pathname === '/') {
-    req.nextUrl.pathname = '/home';
-    return NextResponse.redirect(req.nextUrl)
-  }
-
   if (
-    pathname === '/home' ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
@@ -31,7 +25,8 @@ const middleware = async (req: NextRequest, res: NextResponse) => {
     return NextResponse.next();
   }
 
-  const jwt = req.cookies.get(process.env.COOKIE_NAME);
+  const jwt = req.cookies.get(process.env.COOKIE_NAME as string);
+
 
   if (!jwt) {
     req.nextUrl.pathname = '/sign-in';

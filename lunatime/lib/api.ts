@@ -1,9 +1,3 @@
-/*
-  TO-DO:
-  * typing
-  * why is signIn a POST method?
-*/
-
 const fetcher = async ({ url, method, body, json = true }) => {
   try {
     const res = await fetch(url, {
@@ -15,10 +9,9 @@ const fetcher = async ({ url, method, body, json = true }) => {
       },
     });
 
-    // FLAGGING FOR PAGES VS APP ISSUE
     if (json) {
       const data = await res.json();
-      return data.data;
+      return data;
     }
     // ===============================
 
@@ -32,6 +25,7 @@ export const signUp = async (user) => {
     url: '/api/sign-up',
     method: 'POST',
     body: user,
+    // json: false,
   });
 };
 
@@ -40,6 +34,6 @@ export const signIn = async (user) => {
     url: '/api/sign-in',
     method: 'POST',
     body: user,
-    json: false
+    // json: false
   });
 };

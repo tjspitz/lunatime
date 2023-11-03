@@ -2,11 +2,6 @@ import bcrypt from 'bcrypt';
 import { SignJWT, jwtVerify } from 'jose';
 import User from './db/userModel';
 
-/*
-  TO-DO:
-  * typing
-*/
-
 export const hashPwd = (pwd: string) => bcrypt.hash(pwd, 10);
 export const comparePwds = (plainPwd: string, hashedPwd: string) =>
   bcrypt.compare(plainPwd, hashedPwd);
@@ -28,7 +23,7 @@ export const validateJWT = async(jwt: string) => {
     jwt,
     new TextEncoder().encode(process.env.JWT_SECRET)
   );
-  return payload.payload as any;
+  return payload;
 }
 
 export const getUserFromCookie = async (cookies) => {
