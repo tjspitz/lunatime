@@ -27,6 +27,9 @@ const initialState = {
   lastName: '',
   email: '',
   password: '',
+  cycleLength: 30,
+  periodLength: 5,
+  lastPeriod: new Date(),
 };
 
 const AuthForm = ({ mode }: { mode: string; }) => {
@@ -62,6 +65,16 @@ const AuthForm = ({ mode }: { mode: string; }) => {
   };
   const handlePasswordChange = (e: any) => {
     setForm((s) => ({ ...s, password: e.target.value }));
+  };
+  const handleCycleChange = (e: any) => {
+    setForm((s) => ({ ...s, cycleLength: e.target.value }));
+  };
+  const handleMenstrualChange = (e: any) => {
+    setForm((s) => ({ ...s, periodLength: e.target.value }));
+  };
+  const handleShowPwdClick = (e: any) => {
+    e.preventDefault();
+    setHidePWd(!hidePwd);
   };
 
   const content = mode === 'register' ? signUpContent : signInContent;
@@ -104,34 +117,88 @@ const AuthForm = ({ mode }: { mode: string; }) => {
               </div>
             </div>
           )}
-          <div className='mb-8'>
-            <div className='mb-4 ml-2 text-lg underline text-black/50'>
-              Email
+          <div className='flex justify-between mb-8'>
+            <div className='mb-8'>
+              <div className='mb-4 ml-2 text-lg underline text-black/50'>
+                Email
+              </div>
+              <Input
+                intent='primary'
+                size='medium'
+                required
+                type='email'
+                placeholder='Email'
+                value={form.email}
+                onChange={handleEmailChange}
+              />
             </div>
-            <Input
-              intent='primary'
-              size='medium'
-              required
-              type='email'
-              placeholder='Email'
-              value={form.email}
-              onChange={handleEmailChange}
-            />
-          </div>
-          <div className='mb-8'>
-            <div className='mb-4 ml-2 text-lg underline text-black/50'>
-              Password
+            <div className='mb-8'>
+              <div className='mb-4 ml-2 text-lg underline text-black/50'>
+                Password
+              </div>
+              <Button
+                intent='primary'
+                size='small'
+                type='button'
+                onClick={handleShowPwdClick}
+              >
+                {hidePwd ? 'Show' : 'Hide'}
+              </Button>
+              <Input
+                intent='primary'
+                size='medium'
+                required
+                type={hidePwd ? 'password' : 'text'}
+                placeholder='Password'
+                value={form.password}
+                onChange={handlePasswordChange}
+              />
             </div>
-            <Input
-              intent='primary'
-              size='medium'
-              required
-              type={hidePwd ? 'password' : 'text'}
-              placeholder='Password'
-              value={form.password}
-              onChange={handlePasswordChange}
-            />
           </div>
+          {mode === 'register' && (
+            <fieldset className='flex items-center justify-between mb-8'>
+              <div className='max-w-sm pl-2'>
+                <div className='mb-4 ml-2 italic text-med text-black/50'>
+                  Menstruation typically lasts...
+                </div>
+                <Input
+                  id='periodLength'
+                  className='max-w-[150px]'
+                  intent='primary'
+                  size='medium'
+                  type='number'
+                  value={form.periodLength}
+                  onChange={handleMenstrualChange}
+                />
+                <label
+                  className='pl-2 italic text-black/50'
+                  htmlFor='periodLength'
+                >
+                  days
+                </label>
+              </div>
+              <div className='max-w-sm pr-2'>
+                <div className='mb-4 ml-2 italic text-med text-black/50'>
+                  From end of menstruation to beginning of next is usually...
+                </div>
+                <Input
+                  id='cycleLength'
+                  className='max-w-[150px]'
+                  intent='primary'
+                  size='medium'
+                  type='number'
+                  value={form.cycleLength}
+                  onChange={handleCycleChange}
+                />
+                <label
+                  className='pl-2 italic text-black/50'
+                  htmlFor='cycleLength'
+                >
+                  days
+                </label>
+              </div>
+            </fieldset>
+          )}
           <div className='mb-8'>
             <div className='flex items-center justify-between'>
               <span>
