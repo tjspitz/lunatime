@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   pic: { type: Buffer, required: false },
   cycleLength: { type: Number, default: 30 },
-  menstrualLength: { type: Number, default: 5 },
+  periodLength: { type: Number, default: 5 },
   address: {
     city: { type: String, required: false },
     state: { type: String, required: false },

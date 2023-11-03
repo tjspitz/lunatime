@@ -6,4 +6,6 @@ const noteSchema = new mongoose.Schema({
   note: String,
 });
 
+const Note = mongoose.models.Note || mongoose.model('Note', noteSchema);
+
 export default noteSchema;
