@@ -48,6 +48,9 @@ const Input: FC<InputProps> = ({
   intent,
   size,
   className,
+  required,
+  type,
+  value,
   ...props
 }) => {
   return (

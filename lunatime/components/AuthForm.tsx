@@ -2,7 +2,7 @@
 import { signIn, signUp } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState, useReducer } from 'react';
+import { useCallback, useState } from 'react';
 import Input from './Input';
 import Button from './Button';
 

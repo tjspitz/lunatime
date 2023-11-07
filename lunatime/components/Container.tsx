@@ -10,7 +10,7 @@ const Container = ({
   return (
     <div
       className={clsx(
-        'rounded-2xl border-solid border-2 border-gray-200',
+        'rounded-2xl border-solid border-4 border-pink-950 bg-yellow-50',
         className,
       )}
     >

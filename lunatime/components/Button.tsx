@@ -56,6 +56,7 @@ const Button: FC<ButtonProps> = ({
   className,
   intent,
   size,
+  type,
   ...props
 }) => {
   return (
