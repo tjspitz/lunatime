@@ -17,7 +17,7 @@ const DashboardRootLayout = ({ children }: { children: React.ReactNode }) => {
       className={clsx(inter.variable, 'dark')}
     >
       <head />
-      <body className="w-screen h-screen p-6">
+      <body className="w-screen h-screen p-6 bg-pink-200">
         <Container className="flex w-full h-full p-6 mx-auto align-center">
           <main className="w-full h-full pl-6">{children}</main>
         </Container>

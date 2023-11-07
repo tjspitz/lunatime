@@ -11,7 +11,7 @@ const AuthRootLayout = ({ children }: { children: React.ReactNode }) => {
       className={inter.variable}
     >
       <head />
-      <body className='w-screen h-screen p-6'>
+      <body className='w-screen h-screen p-6 bg-pink-50'>
         <Container className='flex items-center justify-center w-full h-full'>
           {children}
         </Container>
