@@ -1,4 +1,5 @@
 'use client';
+import { ChangeEvent, FormEvent, MouseEvent } from 'react';
 import { signIn, signUp } from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -36,7 +37,7 @@ const AuthForm = ({ mode }: { mode: string; }) => {
   const router = useRouter();
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
         mode === 'register' ? await signUp(form) : await signIn(form);
@@ -51,19 +52,19 @@ const AuthForm = ({ mode }: { mode: string; }) => {
     [mode, form, router]
   );
 
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm((s) => ({ ...s, firstName: e.target.value }));
   };
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm((s) => ({ ...s, lastName: e.target.value }));
   };
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm((s) => ({ ...s, email: e.target.value }));
   };
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm((s) => ({ ...s, password: e.target.value }));
   };
-  const handleShowPwdClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleShowPwdClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setHidePWd(!hidePwd);
   };
