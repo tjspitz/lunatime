@@ -4,7 +4,6 @@ import mongo from '@/lib/db/dbConfig';
 import User from '@/lib/db/userModel';
 import Cycle from '@/lib/db/cycleModel';
 import { createJWT, hashPwd } from '@/lib/auth';
-import { serialize } from 'cookie';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
@@ -37,34 +36,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       lastName: body.lastName,
       email: body.email,
       password: await hashPwd(body.password),
-      cycleLength: body.cycleLength,
-      menstrualLength: body.menstrualLength,
     });
 
     const jwt = await createJWT(user);
-
-    // res.setHeader(
-    //   "Set-Cookie",
-    //   serialize(process.env.COOKIE_NAME as string, jwt, {
-    //     httpOnly: true,
-    //     path: "/",
-    //     maxAge: 60 * 60 * 24 * 7,
-    //   })
-    // );
-
-    // const newHeaders = new Headers(res.headers);
-    // newHeaders.set(
-    //   'Set-Cookie',
-    //   serialize(process.env.COOKIE_NAME as string, jwt, {
-    //     httpOnly: true,
-    //       path: '/',
-    //       maxAge: 604800,
-    //   }),
-    // );
-
-
-    // res.status(201);
-    // res.end();
 
     res = NextResponse.json(
       { success: true },
@@ -73,16 +47,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     res.cookies.set(process.env.COOKIE_NAME as string, jwt, {
       httpOnly: true,
-      path: '/', // TODO
+      path: '/home', // TODO
       maxAge: 604800,
     });
 
     return res;
-    // return NextResponse.json(res);
 
   } catch(error) {
     console.error('error: ', error)
-    res = NextResponse.json(
+    return NextResponse.json(
       {
         body: { 'data': error },
         success: false,
@@ -92,9 +65,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
         headers: { 'content-type': 'application/json' },
       },
     );
-    return res;
-    // res.status(402);
-    // res.end();
-    // console.error('Failed to complete Registration in POST request: \n', error);
   }
 }
