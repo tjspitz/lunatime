@@ -30,7 +30,7 @@ const initialState = {
   password: '',
 };
 
-const AuthForm = ({ mode }: { mode: string; }) => {
+const AuthForm = ({ mode }: { mode: string }) => {
   const [form, setForm] = useState({ ...initialState });
   const [hidePwd, setHidePWd] = useState(true);
   const [error, setError] = useState('');
@@ -72,93 +72,99 @@ const AuthForm = ({ mode }: { mode: string; }) => {
   const content = mode === 'register' ? signUpContent : signInContent;
 
   return (
-    <main className='w-3/4 mx-auto mt-4'>
-      <div className='w-full'>
-        <div className='text-center'>
-          <h2 className='mb-2 text-xl'>{content.header}</h2>
-          < p className='text-lg italic text-black/25'>{content.subheader}</p>
+    <main className="w-3/4 mx-auto mt-4">
+      <div className="w-full">
+        <div className="text-center">
+          <h2 className="mb-2 text-xl">{content.header}</h2>
+          <p className="text-lg italic text-black/25">{content.subheader}</p>
         </div>
-        <form className='w-full py-10 ml-4' onSubmit={handleSubmit}>
+        <form
+          className="w-full py-10 ml-4"
+          onSubmit={handleSubmit}
+        >
           {mode === 'register' && (
-            <div className='flex justify-between mb-8'>
-              <div className='pr-2'>
-                <div className='mb-4 ml-2 text-lg underline text-black/50'>
+            <div className="flex justify-between mb-8">
+              <div className="pr-2">
+                <div className="mb-4 ml-2 text-lg underline text-black/50">
                   First Name
                 </div>
                 <Input
-                  intent='primary'
-                  size='medium'
+                  intent="primary"
+                  size="medium"
                   required
-                  placeholder='First Name'
+                  placeholder="First Name"
                   value={form.firstName}
                   onChange={handleFirstNameChange}
                 />
               </div>
-              <div className='pl-2'>
-                <div className='mb-4 ml-2 text-lg underline text-black/50'>
+              <div className="pl-2">
+                <div className="mb-4 ml-2 text-lg underline text-black/50">
                   Last Name
                 </div>
                 <Input
-                  intent='primary'
-                  size='medium'
+                  intent="primary"
+                  size="medium"
                   required
-                  placeholder='Last Name'
+                  placeholder="Last Name"
                   value={form.lastName}
                   onChange={handleLastNameChange}
                 />
               </div>
             </div>
           )}
-          <div className='flex justify-between mb-8'>
-            <div className='mb-8'>
-              <div className='mb-4 ml-2 text-lg underline text-black/50'>
+          <div className="flex justify-between mb-8">
+            <div className="mb-8">
+              <div className="mb-4 ml-2 text-lg underline text-black/50">
                 Email
               </div>
               <Input
-                intent='primary'
-                size='medium'
+                intent="primary"
+                size="medium"
                 required
-                type='email'
-                placeholder='Email'
+                type="email"
+                placeholder="Email"
                 value={form.email}
                 onChange={handleEmailChange}
               />
             </div>
-            <div className='mb-8'>
-              <div className='mb-4 ml-2 text-lg underline text-black/50'>
+            <div className="mb-8">
+              <div className="mb-4 ml-2 text-lg underline text-black/50">
                 Password
               </div>
               <Button
-                intent='primary'
-                size='small'
-                type='button'
+                intent="primary"
+                size="small"
+                type="button"
                 onClick={handleShowPwdClick}
               >
                 {hidePwd ? 'Show' : 'Hide'}
               </Button>
               <Input
-                intent='primary'
-                size='medium'
+                intent="primary"
+                size="medium"
                 required
                 type={hidePwd ? 'password' : 'text'}
-                placeholder='Password'
+                placeholder="Password"
                 value={form.password}
                 onChange={handlePasswordChange}
               />
             </div>
           </div>
-          <div className='mb-8'>
-            <div className='flex items-center justify-between'>
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
               <span>
                 <Link
                   href={content.linkUrl}
-                  className='font-bold text-blue-600'
+                  className="font-bold text-blue-600"
                 >
                   {content.linkText}
                 </Link>
               </span>
               <div>
-                <Button type='submit' intent='secondary'>
+                <Button
+                  type="submit"
+                  intent="secondary"
+                >
                   {content.buttonText}
                 </Button>
               </div>
@@ -171,56 +177,3 @@ const AuthForm = ({ mode }: { mode: string; }) => {
 };
 
 export default AuthForm;
-
-/*
-MOVE TO A "NEW USER" PAGE
-
-  // cycleLength: 30,
-  // periodLength: 5,
-  // lastPeriod: new Date()
-
-{mode === 'register' && (
-  <fieldset className='flex items-center justify-between mb-8'>
-    <div className='max-w-sm pl-2'>
-      <div className='mb-4 ml-2 italic text-med text-black/50'>
-        Menstruation typically lasts...
-      </div>
-      <Input
-        id='periodLength'
-        className='max-w-[150px]'
-        intent='primary'
-        size='medium'
-        type='number'
-        value={form.periodLength}
-        onChange={handleMenstrualChange}
-      />
-      <label
-        className='pl-2 italic text-black/50'
-        htmlFor='periodLength'
-      >
-        days
-      </label>
-    </div>
-    <div className='max-w-sm pr-2'>
-      <div className='mb-4 ml-2 italic text-med text-black/50'>
-        From end of menstruation to beginning of next is usually...
-      </div>
-      <Input
-        id='cycleLength'
-        className='max-w-[150px]'
-        intent='primary'
-        size='medium'
-        type='number'
-        value={form.cycleLength}
-        onChange={handleCycleChange}
-      />
-      <label
-        className='pl-2 italic text-black/50'
-        htmlFor='cycleLength'
-      >
-        days
-      </label>
-    </div>
-  </fieldset>
-)}
-*/
