@@ -13,7 +13,7 @@ const Home = () => {
         </p>
         <p> This is just proof of sign-in and proper redirect for now...</p>
         <div>
-          <Link href="/profile">
+          <Link href="/new-user">
             <Button
               intent="primary"
               size="medium"
