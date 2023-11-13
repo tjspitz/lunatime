@@ -37,3 +37,12 @@ export const signIn = async (user) => {
     // json: false
   });
 };
+
+export const signOut = async (user) => {
+  return fetcher({
+    url: 'api/sign-out',
+    method: 'POST',
+    body: user,
+    json: false,
+  });
+};
