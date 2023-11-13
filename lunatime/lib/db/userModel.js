@@ -3,8 +3,8 @@ import cycleSchema from './cycleModel';
 import noteSchema from './notesModel';
 
 const userSchema = new mongoose.Schema({
-  createdAt: { type: Date, default: Date.now },
-  lastEdited: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: new Date() },
+  lastEdited: { type: Date, default: new Date() },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   phone: { type: String, required: false },
