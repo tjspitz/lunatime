@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import User from '@/lib/db/userModel';
 import { comparePwds, createJWT } from '@/lib/auth';
+import User from '@/lib/db/userModel';
+import mongo from '@/lib/db/dbConfig';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
+
+  try {
+    await mongo();
+  } catch(error) {
+    console.error('Failed to reach MongoDB: \n', error);
+  }
+
   const user = await User.findOne({ email: body.email });
 
   if (!user) {
