@@ -39,7 +39,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
     res.cookies.set(process.env.COOKIE_NAME as string, jwt, {
       httpOnly: true,
-      path: '/home', // TODO
+      path: '/',
       maxAge: 604800,
     });
 

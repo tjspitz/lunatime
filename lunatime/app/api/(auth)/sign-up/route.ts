@@ -8,22 +8,6 @@ import { createJWT, hashPwd } from '@/lib/auth';
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
 
-  /* Create/embed the first 'date' obj
-
-    body.lastPeriod: date last one started
-      // calulate its end based on body.menstrualLength
-
-    body.dates: await Cycle.create({
-      cycleLength: body.cycleLength,
-      menstrualLength: body.menstrualLength,
-      fertileRange: <...>,
-      pmsRange: <...>,
-      menstrualRange: [body.lastPeriod, (body.lastPeriod + body.menstrualLength)],
-
-    })
-
-  */
-
   try {
     await mongo();
   } catch(error) {
@@ -47,7 +31,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     res.cookies.set(process.env.COOKIE_NAME as string, jwt, {
       httpOnly: true,
-      path: '/home', // TODO
+      path: '/',
       maxAge: 604800,
     });
 
