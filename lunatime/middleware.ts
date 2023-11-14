@@ -14,6 +14,11 @@ const validateJWT = async (jwt: string) => {
 const middleware = async (req: NextRequest, res: NextResponse) => {
   const { pathname } = req.nextUrl;
 
+  if (pathname === '/') {
+    req.nextUrl.pathname = '/home';
+    return NextResponse.redirect(req.nextUrl);
+  }
+
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
