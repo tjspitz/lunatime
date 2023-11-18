@@ -1,3 +1,53 @@
+import { add, sub } from 'date-fns';
+import {
+  CyclePost,
+  MakeFirstCycle,
+  // MakeNewCycle,
+  GetPmsRange,
+  GetFertileRange,
+  GetMenstrualRange,
+} from './types';
+
+export const makeFirstCycle: MakeFirstCycle = (current) => {
+  const { cycleLength, periodLength, periodStart, lastEdited } = current;
+  const newCycle: CyclePost = {
+    lastEdited,
+    cycleLength,
+    periodLength,
+    pmsRange: [null, null],
+    fertileRange: getFertileRange(cycleLength, periodStart, true),
+    menstrualRange: getMenstrualRange(periodStart, periodLength),
+  };
+  newCycle.pmsRange = getPmsRange(newCycle.fertileRange[1]);
+  return newCycle;
+};
+
+// export const makeNewCycle: MakeNewCycle = (current, prev) => {
+//   return null;
+// };
+
+const getPmsRange: GetPmsRange = (rangeEnd) => {
+  const start = add(rangeEnd, { days: 1 });
+  const end = add(start, { days: 14 });
+  return [start, end];
+};
+
+const getFertileRange: GetFertileRange = (length, prevStart, isFirst) => {
+  if (isFirst) {
+    prevStart = sub(prevStart, { days: length });
+  }
+  const ovDay = add(prevStart, { days: length - 14 });
+  const start = sub(ovDay, { days: 7 });
+  const end = add(ovDay, { days: 1 });
+
+  return [start, end];
+};
+
+const getMenstrualRange: GetMenstrualRange = (start, length) => {
+  const end = add(start, { days: length });
+  return [start, end];
+};
+
 /*
 To calculate when your next period will be:
 

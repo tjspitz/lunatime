@@ -13,8 +13,6 @@ const fetcher = async ({ url, method, body, json = true }) => {
       const data = await res.json();
       return data;
     }
-    // ===============================
-
   } catch (error: any) {
     console.error(error);
   }
@@ -25,7 +23,7 @@ export const signUp = async (user) => {
     url: '/api/sign-up',
     method: 'POST',
     body: user,
-    // json: false,
+    json: false,
   });
 };
 
@@ -34,15 +32,24 @@ export const signIn = async (user) => {
     url: '/api/sign-in',
     method: 'POST',
     body: user,
-    // json: false
+    json: false
   });
 };
 
 export const signOut = async (user) => {
   return fetcher({
-    url: 'api/sign-out',
+    url: '/api/sign-out',
     method: 'POST',
     body: user,
+    json: false,
+  });
+};
+
+export const addCycle = async(newCycle) => {
+  return fetcher({
+    url: '/api/calendar',
+    method: 'POST',
+    body: newCycle,
     json: false,
   });
 };

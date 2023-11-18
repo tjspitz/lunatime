@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { SignJWT, jwtVerify } from 'jose';
 import User from './db/userModel';
+import mongo from './db/dbConfig';
 
 export const hashPwd = (pwd: string) => bcrypt.hash(pwd, 10);
 export const comparePwds = (plainPwd: string, hashedPwd: string) =>
@@ -26,9 +27,16 @@ export const validateJWT = async(jwt: string) => {
   return payload;
 }
 
-export const getUserFromCookie = async (cookies) => {
-  const jwt = cookies.get(process.env.COOKIE_NAME);
+export const getUserFromCookie = async (cookie) => {
+  // const jwt = cookies.get(process.env.COOKIE_NAME);
+  const jwt = cookie;
   const { id } = await validateJWT(jwt);
-  const user = await User.findById(id);
-  return user;
+  try {
+    await mongo();
+    const user = await User.findById(id);
+    return user;
+  } catch(error) {
+    console.error('getUserfromCookie failure:\n', error);
+    return error;
+  }
 };

@@ -1,11 +1,16 @@
 'use client';
 import { useState, useCallback } from 'react';
-import { ChangeEvent, FormEvent, MouseEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { addCycle } from '@/lib/api';
+import { CycleState, DateVal } from '@/lib/types';
+import Calendar from 'react-calendar';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-import Logout from '@/components/Logout';
+// import Logout from '@/components/Logout';
+import 'react-calendar/dist/Calendar.css';
 
-const initialState = {
+const initialState: CycleState = {
   cycleLength: 30,
   periodLength: 5,
   periodStart: new Date(),
@@ -13,23 +18,26 @@ const initialState = {
 };
 
 const NewUser = () => {
-  const [cycle, setCycle] = useState({ ...initialState });
+  const [cycle, setCycle] = useState<CycleState>({ ...initialState });
+  const router = useRouter();
+  // TODO
+    // there should be a test for whether the user has accessed this page before
+    // redirect if they have
 
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log('new cycle entry is: ', cycle);
-      // try {
-      // mode === 'register' ? await signUp(form) : await signIn(form);
-      // router.replace('/home');
-      // } catch (error) {
-      // setError(`Could not ${mode}...`);
-      // console.error(error);
-      // } finally {
-      // setCycle({ ...initialState });
-      // }
+      try {
+        await addCycle(cycle);
+        router.replace('/calendar');
+      } catch(error) {
+        console.error(error);
+      } finally {
+        setCycle({ ...initialState });
+      }
     },
-    [cycle]
+    [cycle, router]
   );
 
   const handleCycleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,15 +48,18 @@ const NewUser = () => {
     setCycle((s) => ({ ...s, periodLength: Number(e.target.value) }));
   };
 
-  const handleStartChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('e.target.value: ', e.target.value);
+  const handleStartChange = (newDate: DateVal) => {
+    setCycle((s) => ({ ...s, periodStart: newDate }));
   };
-  // flex items-center justify-between w-3/4 mx-auto mt-4 mb-8
+
   return (
     <main className="w-3/4 mx-auto mt-4">
       <div className="w-full">
         <div className="text-center">
           <h2 className="mb-2 text-xl">Create your first cycle entry</h2>
+          <h4 className="italic text-med text-black/25">
+            This helps predict your next cycle
+          </h4>
         </div>
         <form
           className="w-full py-10 ml-4"
@@ -60,7 +71,7 @@ const NewUser = () => {
                 className="mb-4 ml-2 italic text-med text-black/50"
                 htmlFor="cycleLength"
               >
-                My cycle duration is usually
+                Duration of an average cycle:
                 <Input
                   id="cycleLength"
                   className="ml-4 mr-2"
@@ -68,9 +79,9 @@ const NewUser = () => {
                   size="medium"
                   type="number"
                   value={cycle.cycleLength}
+                  placeholder="(default is 5)"
                   onChange={handleCycleChange}
                 />
-                days
               </label>
             </div>
             <div className="pr-2">
@@ -78,7 +89,7 @@ const NewUser = () => {
                 className="mb-4 ml-2 italic text-med text-black/50"
                 htmlFor="periodLength"
               >
-                My period typically lasts
+                Duration of an average period:
                 <Input
                   id="periodLength"
                   className="ml-4 mr-2"
@@ -86,40 +97,32 @@ const NewUser = () => {
                   size="medium"
                   type="number"
                   value={cycle.periodLength}
+                  placeholder="(default is 30)"
                   onChange={handleMenstrualChange}
                 />
-                days
               </label>
             </div>
-            <div className="pr-2">
+            <div className="pr-2 mt-4">
               <label
                 className="mb-4 ml-2 italic text-med text-black/50"
                 htmlFor="periodStart"
               >
-                My last period started on
-                <Input
-                  id="periodStart"
-                  className="ml-4"
-                  intent="primary"
-                  size="medium"
-                  type="date"
-                  // value={new Date()}
-                  onChange={handleStartChange}
-                />
+                Most recent period <b>start</b> date:
               </label>
+              <Calendar
+                // id="periodStart"
+                value={cycle.periodStart}
+                onChange={handleStartChange}
+                maxDate={new Date()}
+                className="mt-4"
+              />
             </div>
-            <div className='flex justify-end space-x-4'>
+            <div className="flex justify-end space-x-4">
               <Button
                 type="submit"
                 intent="primary"
               >
                 Save
-              </Button>
-              <Button
-                type="reset"
-                intent="secondary"
-              >
-                Reset
               </Button>
             </div>
           </div>
@@ -130,21 +133,3 @@ const NewUser = () => {
 };
 
 export default NewUser;
-
-/* API ROUTE
-
-  Create/embed the first 'date' obj
-
-    body.lastPeriod: date last one started
-      // calulate its end based on body.menstrualLength
-
-    body.dates: await Cycle.create({
-      cycleLength: body.cycleLength,
-      menstrualLength: body.menstrualLength,
-      fertileRange: <...>,
-      pmsRange: <...>,
-      menstrualRange: [body.lastPeriod, (body.lastPeriod + body.menstrualLength)],
-
-    })
-
-  */

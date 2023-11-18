@@ -1,8 +1,6 @@
-// import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import mongo from '@/lib/db/dbConfig';
 import User from '@/lib/db/userModel';
-import Cycle from '@/lib/db/cycleModel';
 import { createJWT, hashPwd } from '@/lib/auth';
 
 export async function POST(req: NextRequest, res: NextResponse) {
