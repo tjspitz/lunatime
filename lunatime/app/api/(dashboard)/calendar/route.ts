@@ -1,27 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { getUserFromCookie } from '@/lib/auth';
 import { makeFirstCycle } from '@/lib/mCalc';
-import mongo from '@/lib/db/dbConfig';
 import { CyclePost, CycleReq } from '@/lib/types';
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const userCookie = cookies().get('lunatime_cookie');
+
+  // req.json() will return Dates as Strings
+  // they need to be converted back to Date objects
   const body: CycleReq = await req.json();
+  body.lastEdited = new Date(body.lastEdited);
+  body.periodStart = new Date(body.periodStart);
+
   const cycle: CyclePost = makeFirstCycle(body);
 
-  try {
-    await mongo();
-  } catch(error) {
-    console.error('Failed to reach MongoDB: \n', error);
-  }
 
   try {
-    const user = await getUserFromCookie(userCookie);
+    // mongo is connected in getUserFromCookie
+    const user = await getUserFromCookie(userCookie as RequestCookie);
     if (!user) {
       throw new Error('user was not found in the database');
     }
-    await user.dates.push(cycle);
+    user.dates.push(cycle);
+    await user.save();
     res = NextResponse.json(
       { success: true },
       {

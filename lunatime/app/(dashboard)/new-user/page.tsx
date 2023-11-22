@@ -27,10 +27,9 @@ const NewUser = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log('new cycle entry is: ', cycle);
       try {
         await addCycle(cycle);
-        router.replace('/calendar');
+        // router.replace('/calendar');
       } catch(error) {
         console.error(error);
       } finally {
@@ -79,7 +78,7 @@ const NewUser = () => {
                   size="medium"
                   type="number"
                   value={cycle.cycleLength}
-                  placeholder="(default is 5)"
+                  placeholder="(default is 30)"
                   onChange={handleCycleChange}
                 />
               </label>
@@ -97,7 +96,7 @@ const NewUser = () => {
                   size="medium"
                   type="number"
                   value={cycle.periodLength}
-                  placeholder="(default is 30)"
+                  placeholder="(default is 5)"
                   onChange={handleMenstrualChange}
                 />
               </label>
