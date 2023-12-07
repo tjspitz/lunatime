@@ -2,7 +2,7 @@ import { add, sub } from 'date-fns';
 import {
   CyclePost,
   MakeFirstCycle,
-  // MakeNewCycle,
+  MakeCycle,
   GetPmsRange,
   GetFertileRange,
   GetMenstrualRange,
@@ -22,12 +22,18 @@ export const makeFirstCycle: MakeFirstCycle = (current) => {
   return newCycle;
 };
 
-// export const makeNewCycle: MakeNewCycle = (current, prev) => {
-//   return null;
-// };
+export const makeCycle: MakeCycle = (prev) => {
+  const cycle: CyclePost = {
+    ...prev,
+    fertileRange: getFertileRange(prev.cycleLength, prev.menstrualRange[0]),
+    menstrualRange: getMenstrualRange(prev.menstrualRange[0], prev.periodLength),
+  }
+  cycle.pmsRange = getPmsRange(cycle.fertileRange[1]);
+  return cycle;
+};
 
-const getPmsRange: GetPmsRange = (rangeEnd) => {
-  const start = add(rangeEnd, { days: 1 });
+const getPmsRange: GetPmsRange = (fertileEnd) => {
+  const start = add(fertileEnd, { days: 1 });
   const end = add(start, { days: 14 });
   return [start, end];
 };

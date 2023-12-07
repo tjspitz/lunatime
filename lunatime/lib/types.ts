@@ -23,7 +23,7 @@ export type CyclePost = {
 };
 
 export type MakeFirstCycle = (current: CycleReq) => CyclePost;
-export type MakeNewCycle = (current: CyclePost, prev: CyclePost) => CyclePost;
+export type MakeCycle = (prev: CyclePost) => CyclePost;
 export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 
 export type GetFertileRange = (

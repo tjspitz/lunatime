@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { getUserFromCookie } from '@/lib/auth';
-import { makeFirstCycle } from '@/lib/mCalc';
+import { makeFirstCycle, makeCycle } from '@/lib/mCalc';
 import { CyclePost, CycleReq } from '@/lib/types';
+
+// the only time this API is called is when a user is new (has no cycles)
+// following the first time, user would either confirm or edit predicted next cycle
+// calling a PUT or PATCH API from Calendar
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const userCookie = cookies().get('lunatime_cookie');
@@ -14,8 +18,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
   body.lastEdited = new Date(body.lastEdited);
   body.periodStart = new Date(body.periodStart);
 
-  const cycle: CyclePost = makeFirstCycle(body);
-
+  const firstCycle: CyclePost = makeFirstCycle(body);
+  // but now we can make a second one
+  // estimate nextPeriodStart based on body.periodStart + body.cycleDuration
+    // call makeCycle() with modified body obj
+  const nextCycle: CyclePost = makeCycle(firstCycle);
 
   try {
     // mongo is connected in getUserFromCookie
@@ -23,7 +30,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     if (!user) {
       throw new Error('user was not found in the database');
     }
-    user.dates.push(cycle);
+    user.dates.push(firstCycle, nextCycle);
     await user.save();
     res = NextResponse.json(
       { success: true },
