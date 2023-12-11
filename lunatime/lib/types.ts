@@ -22,16 +22,13 @@ export type CyclePost = {
   menstrualRange: [Date, Date];
 };
 
-export type MakeFirstCycle = (current: CycleReq) => CyclePost;
-export type MakeCycle = (prev: CyclePost) => CyclePost;
-export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
+export type MakeCycle = (current: CycleReq) => CyclePost;
 
 export type GetFertileRange = (
   length: number,
   prevStart: Date,
-  isFirst?: Boolean
 ) => [Date, Date];
-
+export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 export type GetMenstrualRange = (start: Date, length: number) => [Date, Date];
 
 // export type UserInfo = {

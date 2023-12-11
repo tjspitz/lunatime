@@ -1,35 +1,38 @@
-import { add, sub } from 'date-fns';
+import { add, sub, differenceInDays } from 'date-fns';
 import {
   CyclePost,
-  MakeFirstCycle,
   MakeCycle,
   GetPmsRange,
   GetFertileRange,
   GetMenstrualRange,
 } from './types';
 
-export const makeFirstCycle: MakeFirstCycle = (current) => {
+export const makeCycle: MakeCycle = (current) => {
   const { cycleLength, periodLength, periodStart, lastEdited } = current;
   const newCycle: CyclePost = {
     lastEdited,
     cycleLength,
     periodLength,
-    pmsRange: [null, null],
-    fertileRange: getFertileRange(cycleLength, periodStart, true),
     menstrualRange: getMenstrualRange(periodStart, periodLength),
+    fertileRange: getFertileRange(cycleLength, periodStart),
+    pmsRange: [null, null],
   };
   newCycle.pmsRange = getPmsRange(newCycle.fertileRange[1]);
-  return newCycle;
+
+  return normalize(newCycle);
 };
 
-export const makeCycle: MakeCycle = (prev) => {
-  const cycle: CyclePost = {
-    ...prev,
-    fertileRange: getFertileRange(prev.cycleLength, prev.menstrualRange[0]),
-    menstrualRange: getMenstrualRange(prev.menstrualRange[0], prev.periodLength),
-  }
-  cycle.pmsRange = getPmsRange(cycle.fertileRange[1]);
-  return cycle;
+const getMenstrualRange: GetMenstrualRange = (start, length) => {
+  const end = add(start, { days: length - 1});
+  return [start, end];
+};
+
+const getFertileRange: GetFertileRange = (length, period) => {
+  const ovDay = add(period, { days: length - 14 });
+  const start = sub(ovDay, { days: 7 });
+  const end = add(ovDay, { days: 1 });
+
+  return [start, end];
 };
 
 const getPmsRange: GetPmsRange = (fertileEnd) => {
@@ -38,21 +41,23 @@ const getPmsRange: GetPmsRange = (fertileEnd) => {
   return [start, end];
 };
 
-const getFertileRange: GetFertileRange = (length, prevStart, isFirst) => {
-  if (isFirst) {
-    prevStart = sub(prevStart, { days: length });
+const normalize = (cycle) => {
+  const normalizedCycle = { ...cycle };
+  const { fertileRange, pmsRange, menstrualRange } = normalizedCycle;
+  const nextPeriodStart = add(menstrualRange[0], { days: cycle.cycleLength });
+  let diff;
+
+  diff = differenceInDays(fertileRange[1], pmsRange[0]);
+  if (diff > -1) {
+    pmsRange[0] = add(fertileRange[1], { days: 1 });
   }
-  const ovDay = add(prevStart, { days: length - 14 });
-  const start = sub(ovDay, { days: 7 });
-  const end = add(ovDay, { days: 1 });
 
-  return [start, end];
-};
-
-const getMenstrualRange: GetMenstrualRange = (start, length) => {
-  const end = add(start, { days: length });
-  return [start, end];
-};
+  diff = differenceInDays(pmsRange[1], nextPeriodStart);
+  if (diff > -1) {
+    pmsRange[1] = sub(nextPeriodStart, { days: 1 });
+  }
+  return normalizedCycle as CyclePost;
+}
 
 /*
 To calculate when your next period will be:
