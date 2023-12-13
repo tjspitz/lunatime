@@ -7,7 +7,6 @@ import { CycleState, DateVal } from '@/lib/types';
 import Calendar from 'react-calendar';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-// import Logout from '@/components/Logout';
 import 'react-calendar/dist/Calendar.css';
 
 const initialState: CycleState = {
@@ -20,16 +19,13 @@ const initialState: CycleState = {
 const NewUser = () => {
   const [cycle, setCycle] = useState<CycleState>({ ...initialState });
   const router = useRouter();
-  // TODO
-    // there should be a test for whether the user has accessed this page before
-    // redirect if they have
 
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
         await addCycle(cycle);
-        // router.replace('/calendar');
+        router.replace('/profile'); // TEMP
       } catch(error) {
         console.error(error);
       } finally {
