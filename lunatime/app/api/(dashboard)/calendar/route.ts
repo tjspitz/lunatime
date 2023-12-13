@@ -31,7 +31,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   try {
     // mongo is connected in getUserFromCookie
-    const user = await getUserFromCookie(userCookie as RequestCookie);
+    // TO-DO: provide exclusions
+    const user = await getUserFromCookie(userCookie as RequestCookie, '');
     if (!user) {
       throw new Error('user was not found in the database');
     }
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
     return res;
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res = NextResponse.json(
       {
         body: { 'data': error },
