@@ -1,4 +1,9 @@
+// General/Misc. types
+export type ReqOptions = {
+  [k: string]: RequestCache;
+};
 
+// Cycles-based types
 type DateValPiece = Date | null;
 export type DateVal = DateValPiece | [DateValPiece, DateValPiece];
 
@@ -30,6 +35,39 @@ export type GetFertileRange = (
 ) => [Date, Date];
 export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 export type GetMenstrualRange = (start: Date, length: number) => [Date, Date];
+
+// Porfile-based types
+export type GetProfile = (exclude: string) => Promise<ProfileInfo>;
+
+export type PatchProfile = (
+  id: string,
+  data: {
+    [k: string]: FormDataEntryValue;
+  }
+) => Promise<PatchedInfo>;
+
+export type ProfileInfo = {
+  _id: string;
+  createdAt: Date;
+  lastEdited: Date;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  email: string;
+  cycleLength: number;
+  periodLength: number;
+  pic?: Buffer;
+  address?: {
+    city: string;
+    state: string;
+    zip: number;
+  };
+};
+
+export type PatchedInfo =
+  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
+    newPic: Buffer;
+};
 
 // export type UserInfo = {
 //   _id: String;

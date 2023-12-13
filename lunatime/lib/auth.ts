@@ -28,7 +28,7 @@ export const validateJWT = async (jwt: string) => {
   return payload;
 };
 
-export const getUserFromCookie = async (cookie: RequestCookie) => {
+export const getUserFromCookie = async (cookie: RequestCookie, excluded: string) => {
   const jwt = cookie.value;
   const {
     // ermagherd TypeScript
@@ -36,7 +36,7 @@ export const getUserFromCookie = async (cookie: RequestCookie) => {
   } = await validateJWT(jwt);
   try {
     await mongo();
-    const user = await User.findById(id);
+    const user = await User.findById(id, excluded);
     return user;
   } catch (error) {
     console.error('getUserfromCookie failure:\n', error);

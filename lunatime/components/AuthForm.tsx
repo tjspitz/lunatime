@@ -40,8 +40,13 @@ const AuthForm = ({ mode }: { mode: string }) => {
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
-        mode === 'register' ? await signUp(form) : await signIn(form);
-        router.replace('/home');
+        if (mode === 'register') {
+          await signUp(form);
+          router.replace('/new-user'); // force first cycle creation
+        } else {
+          await signIn(form);
+          router.replace('/home');
+        }
       } catch (error) {
         setError(`Could not ${mode}...`);
         console.error(error);
