@@ -4,6 +4,7 @@ import User from './db/userModel';
 import mongo from './db/dbConfig';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
+// FUN FACT: bcrypt is now cooperating w/ node v > 16.18.1
 export const hashPwd = (pwd: string) => bcrypt.hash(pwd, 10);
 export const comparePwds = (plainPwd: string, hashedPwd: string) =>
   bcrypt.compare(plainPwd, hashedPwd);

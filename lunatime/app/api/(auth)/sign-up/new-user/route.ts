@@ -1,3 +1,4 @@
+/*
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
@@ -66,3 +67,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return res;
   }
 }
+*/
