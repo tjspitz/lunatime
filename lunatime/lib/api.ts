@@ -53,3 +53,13 @@ export const addCycle = async(newCycle) => {
     json: false,
   });
 };
+
+// no need for its own route(?)
+// export const addCycle = async(newCycle) => {
+//   return fetcher({
+//     url: '/api/sign-up/new-user',
+//     method: 'POST',
+//     body: newCycle,
+//     json: false,
+//   });
+// };

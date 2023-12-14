@@ -24,7 +24,7 @@ const middleware = async (req: NextRequest, res: NextResponse) => {
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
     pathname.startsWith('/sign-in') ||
-    pathname.startsWith('/sign-up') ||
+    pathname === '/sign-up' ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();

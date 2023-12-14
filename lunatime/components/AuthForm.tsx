@@ -42,10 +42,10 @@ const AuthForm = ({ mode }: { mode: string }) => {
       try {
         if (mode === 'register') {
           await signUp(form);
-          router.replace('/new-user'); // force first cycle creation
+          router.replace('/sign-up/new-user'); // force first cycle creation
         } else {
           await signIn(form);
-          router.replace('/home');
+          router.replace('/profile'); // TEMP
         }
       } catch (error) {
         setError(`Could not ${mode}...`);
