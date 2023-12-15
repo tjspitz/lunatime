@@ -1,21 +1,33 @@
-// General/Misc. types
+// General/Misc.
 export type ReqOptions = {
   [k: string]: RequestCache;
 };
 
-// Cycles-based types
+// CALENDAR & CYCLES
 type DateValPiece = Date | null;
 export type DateVal = DateValPiece | [DateValPiece, DateValPiece];
+
+export type MakeCycle = (current: CycleReq) => CyclePost;
+
+export type GetCycles = (id: string) => Promise<CycleDates>;
+
+export type PutCycles = (id: string, dates: CycleDates) => Promise<any>;
+
+export type CycleReq = Omit<CycleState, 'periodStart'> & {
+  periodStart: Date;
+}
+
+export type RangeData = {
+  index: number;
+  type: string;
+  range: Date[];
+}
 
 export type CycleState = {
   cycleLength: number;
   periodLength: number;
   periodStart: DateVal;
   lastEdited: Date;
-}
-
-export type CycleReq = Omit<CycleState, 'periodStart'> & {
-  periodStart: Date;
 }
 
 export type CyclePost = {
@@ -27,8 +39,6 @@ export type CyclePost = {
   menstrualRange: [Date, Date];
 };
 
-export type MakeCycle = (current: CycleReq) => CyclePost;
-
 export type GetFertileRange = (
   length: number,
   prevStart: Date,
@@ -36,8 +46,28 @@ export type GetFertileRange = (
 export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 export type GetMenstrualRange = (start: Date, length: number) => [Date, Date];
 
-// Porfile-based types
+export type CycleDates = {
+  dates: [
+    {
+      _id: String;
+      createdAt: Date;
+      lastEdited: Date;
+      cycleLength: Number;
+      periodLength: Number;
+      fertileRange: [Date, Date];
+      pmsRange: [Date, Date];
+      menstrualRange: [Date, Date];
+    },
+  ];
+};
+
+// PROFILE
 export type GetProfile = (exclude: string) => Promise<ProfileInfo>;
+
+export type PatchedInfo =
+  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
+    newPic: Buffer;
+};
 
 export type PatchProfile = (
   id: string,
@@ -64,11 +94,7 @@ export type ProfileInfo = {
   };
 };
 
-export type PatchedInfo =
-  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
-    newPic: Buffer;
-};
-
+// DEPRECATED(?)
 // export type UserInfo = {
 //   _id: String;
 //   createdAt: Date;
@@ -86,19 +112,6 @@ export type PatchedInfo =
 //     state: String;
 //     zip: Number;
 //   },
-// };
-
-// export type CycleDates = {
-//   dates: [
-//     {
-//       _id: String;
-//       createdAt: Date;
-//       lastEdited: Date;
-//       fertileRange: [Date, Date];
-//       pmsRange: [Date, Date];
-//       menstrualRange: [Date, Date];
-//     },
-//   ];
 // };
 
 // export type NotesInfo = {
@@ -125,7 +138,3 @@ export type PatchedInfo =
 //     [k: string]: FormDataEntryValue;
 //   }
 // ) => Promise<PatchedUser>;
-
-// export type ReqOptions = {
-//   [k: string]: RequestCache;
-// };
