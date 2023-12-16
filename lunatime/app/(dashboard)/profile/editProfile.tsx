@@ -56,7 +56,7 @@ const fiftyStates = [
   'Wyoming',
 ];
 
-const EditForm = ({
+export default function EditForm({
   profileData,
   editable,
   selectedImage,
@@ -68,15 +68,12 @@ const EditForm = ({
   selectedImage: ArrayBuffer | null;
   setSelectedImage: Dispatch<SetStateAction<ArrayBuffer | null>>;
   handleUpdateProfile: any;
-}) => {
-  const {
-    pic,
-    phone,
-    email,
-    address,
-  } = profileData;
+}) {
+  const { pic, phone, email, address } = profileData;
   const picBase64 = pic ? Buffer.from(pic).toString('base64') : null;
-  const selectedPic = selectedImage ? Buffer.from(selectedImage).toString('base64') : null;
+  const selectedPic = selectedImage
+    ? Buffer.from(selectedImage).toString('base64')
+    : null;
 
   const [theState, setTheState] = useState(address?.state);
 
@@ -89,26 +86,28 @@ const EditForm = ({
     e.preventDefault();
     const newPic = e.target.files[0];
     if (newPic) {
-      newPic.arrayBuffer()
-      .then((arrBuf: ArrayBuffer) => {
-        console.log(arrBuf)
-        setSelectedImage(arrBuf)
+      newPic.arrayBuffer().then((arrBuf: ArrayBuffer) => {
+        console.log(arrBuf);
+        setSelectedImage(arrBuf);
       });
     }
   };
 
   return (
     <main>
-      <form className="flex flex-col py-4" onSubmit={handleUpdateProfile}>
+      <form
+        className="flex flex-col py-4"
+        onSubmit={handleUpdateProfile}
+      >
         <label className="flex items-center py-2">
           {selectedImage ? (
-              <Image
-                src={`data:image/png;base64,${selectedPic}`}
-                alt="Selected profile pic"
-                height={100}
-                width={100}
-                className="rounded-full"
-              />
+            <Image
+              src={`data:image/png;base64,${selectedPic}`}
+              alt="Selected profile pic"
+              height={100}
+              width={100}
+              className="rounded-full"
+            />
           ) : (
             <Image
               src={`data:image/png;base64,${picBase64}`}
@@ -174,7 +173,10 @@ const EditForm = ({
             disabled={!editable}
           >
             {fiftyStates.map((state, i) => (
-              <option key={state + (i + 1)} value={state}>
+              <option
+                key={state + (i + 1)}
+                value={state}
+              >
                 {state}
               </option>
             ))}
@@ -189,25 +191,25 @@ const EditForm = ({
             // size={10}
           />
         </label>
-          <div
-            className={`flex flex-row justify-end text-med ${editable ? null : 'hidden'}`}
+        <div
+          className={`flex flex-row justify-end text-med ${
+            editable ? null : 'hidden'
+          }`}
+        >
+          <button
+            className="p-2 mx-4 border-2 border-red-400 border-solid rounded-md"
+            type="reset"
           >
-            <button
-              className="p-2 mx-4 border-2 border-red-400 border-solid rounded-md"
-              type="reset"
-            >
-              Reset
-            </button>
-            <button
-              className="p-2 border-2 border-red-400 border-solid rounded-md"
-              type="submit"
-            >
-              Save
-            </button>
-          </div>
+            Reset
+          </button>
+          <button
+            className="p-2 border-2 border-red-400 border-solid rounded-md"
+            type="submit"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </main>
   );
-};
-
-export default EditForm;
+}

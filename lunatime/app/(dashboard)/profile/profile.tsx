@@ -4,32 +4,11 @@ import { PatchProfile, ProfileInfo } from '@/lib/types';
 import EditForm from './editProfile';
 import { useState } from 'react';
 
-const patchProfile: PatchProfile = async (id, data) => {
-  try {
-    const url = 'http://localhost:3000/api/profile';
-    const { newPic, phone, email, city, state, zip } = data;
-    const formattedData = {
-      newPic: Buffer.from(newPic), // TODO: proper typing
-      phone,
-      email,
-      address: { city, state, zip },
-    };
-    const params = new URLSearchParams({ userId: id });
-    const config = {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formattedData),
-    };
-
-    const res = await fetch(`${url}?${params}`, config);
-    return res.json();
-  } catch (error: any) {
-    console.error(error);
-    return error;
-  }
-};
-
-const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
+export default function ProfileContainer({
+  profile,
+}: {
+  profile: ProfileInfo;
+}) {
   const [selectedImage, setSelectedImage] = useState<ArrayBuffer | null>(null);
   const [editable, setEditable] = useState<Boolean>(false);
 
@@ -76,6 +55,29 @@ const ProfileContainer = ({ profile }: { profile: ProfileInfo }) => {
       </div>
     </main>
   );
-};
+}
 
-export default ProfileContainer;
+async function patchProfile(id, data): Promise<PatchProfile> {
+  try {
+    const url = 'http://localhost:3000/api/profile';
+    const { newPic, phone, email, city, state, zip } = data;
+    const formattedData = {
+      newPic: Buffer.from(newPic), // TODO: proper typing
+      phone,
+      email,
+      address: { city, state, zip },
+    };
+    const params = new URLSearchParams({ userId: id });
+    const config = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formattedData),
+    };
+
+    const res = await fetch(`${url}?${params}`, config);
+    return res.json();
+  } catch (error: any) {
+    console.error(error);
+    return error;
+  }
+}
