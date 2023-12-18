@@ -63,3 +63,12 @@ export const addCycle = async(newCycle) => {
 //     json: false,
 //   });
 // };
+
+export const patchProfile = async(update) => {
+  return fetcher({
+    url: '/api/profile',
+    method: 'PATCH',
+    body: update,
+    json: true,
+  });
+};

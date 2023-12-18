@@ -1,18 +1,14 @@
 'use client';
 import Image from 'next/image';
-import { PatchProfile, ProfileInfo } from '@/lib/types';
+import { patchProfile } from '@/lib/api';
+import { FormDataPlusBuffer, PatchProfile, ProfileInfo } from '@/lib/types';
 import EditForm from './editProfile';
 import { useState } from 'react';
 
-export default function ProfileContainer({
-  profile,
-}: {
-  profile: ProfileInfo;
-}) {
-  const [selectedImage, setSelectedImage] = useState<ArrayBuffer | null>(null);
+export default function ProfileContainer({ profile }: { profile: ProfileInfo; }) {
+  const { _id, firstName, lastName, pic } = profile;
+  const [selectedImage, setSelectedImage] = useState<ArrayBuffer | null>(pic || null);
   const [editable, setEditable] = useState<Boolean>(false);
-
-  const { _id, firstName, lastName } = profile;
 
   const handleUpdateProfile = (e: Event) => {
     e.preventDefault();
@@ -24,9 +20,11 @@ export default function ProfileContainer({
     formJson.newPic = selectedImage;
     // ^ TODO: proper typing, less sketchy workaround
 
-    patchProfile(_id, formJson)
-      .then((response) => console.log('SUCCESS: ', response)) // DEV ONLY
+    const formatted = formatData(_id, formJson);
+    patchProfile(formatted)
+      .then((response) => console.log('SUCCESS: ', response))
       .catch((err) => console.error(err));
+
   };
 
   return (
@@ -57,27 +55,40 @@ export default function ProfileContainer({
   );
 }
 
-async function patchProfile(id, data): Promise<PatchProfile> {
-  try {
-    const url = 'http://localhost:3000/api/profile';
-    const { newPic, phone, email, city, state, zip } = data;
-    const formattedData = {
-      newPic: Buffer.from(newPic), // TODO: proper typing
-      phone,
-      email,
-      address: { city, state, zip },
-    };
-    const params = new URLSearchParams({ userId: id });
-    const config = {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formattedData),
-    };
-
-    const res = await fetch(`${url}?${params}`, config);
-    return res.json();
-  } catch (error: any) {
-    console.error(error);
-    return error;
-  }
+// TO-DO: typing
+function formatData(id, form) {
+  const { newPic, phone, email, city, state, zip } = form;
+  return ({
+    id,
+    newPic: Buffer.from(newPic), // TODO: proper typing
+    phone,
+    email,
+    address: { city, state, zip },
+  });
 }
+
+// OLD
+// async function patchProfile(id, data): Promise<PatchProfile> {
+//   try {
+//     const url = 'http://localhost:3000/api/profile';
+//     const { newPic, phone, email, city, state, zip } = data;
+//     const formattedData = {
+//       newPic: Buffer.from(newPic), // TODO: proper typing
+//       phone,
+//       email,
+//       address: { city, state, zip },
+//     };
+//     const params = new URLSearchParams({ userId: id });
+//     const config = {
+//       method: 'PATCH',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(formattedData),
+//     };
+
+//     const res = await fetch(`${url}?${params}`, config);
+//     return res.json();
+//   } catch (error: any) {
+//     console.error(error);
+//     return error;
+//   }
+// }
