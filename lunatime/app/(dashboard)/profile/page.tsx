@@ -24,21 +24,7 @@ async function getProfile (exclude: string) {
   const userCookie = cookies().get('lunatime_cookie');
   const userProfile: ProfileInfo = await getUserFromCookie(
     userCookie as RequestCookie,
-    exclude
+    exclude,
   );
   return JSON.stringify(userProfile);
 }
-
-// OLD (pre-auth)
-// const getProfile: GetProfile = async (id) => {
-//   const url = 'http://localhost:3000/api/profile';
-//   const params = new URLSearchParams({ userId: id });
-//   const options: ReqOptions = { cache: 'no-store' };
-//   try {
-//     const res = await fetch(`${url}?${params}`, options);
-//     return res.json();
-//   } catch (error: any) {
-//     console.error(error);
-//     return {} as ProfileInfo;
-//   }
-// };

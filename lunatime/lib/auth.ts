@@ -5,6 +5,7 @@ import mongo from './db/dbConfig';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
 // FUN FACT: bcrypt is now cooperating w/ node v > 16.18.1
+  // ACTUALLY NOPE
 export const hashPwd = (pwd: string) => bcrypt.hash(pwd, 10);
 export const comparePwds = (plainPwd: string, hashedPwd: string) =>
   bcrypt.compare(plainPwd, hashedPwd);
@@ -29,7 +30,7 @@ export const validateJWT = async (jwt: string) => {
   return payload;
 };
 
-export const getUserFromCookie = async (cookie: RequestCookie, excluded: string) => {
+export const getUserFromCookie = async (cookie: RequestCookie, filters: string) => {
   const jwt = cookie.value;
   const {
     // ermagherd TypeScript
@@ -37,7 +38,7 @@ export const getUserFromCookie = async (cookie: RequestCookie, excluded: string)
   } = await validateJWT(jwt);
   try {
     await mongo();
-    const user = await User.findById(id, excluded);
+    const user = await User.findById(id, filters);
     return user;
   } catch (error) {
     console.error('getUserfromCookie failure:\n', error);
