@@ -1,0 +1,28 @@
+.fertile,
+.pms,
+.period {
+  min-height: 10vh;
+  font-size: 1rem;
+}
+
+.fertile {
+  background: #86efac;
+}
+
+.pms {
+  background: #f59e0b;
+}
+
+.period {
+  background: #e2778e;
+}
+
+.first {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
+.last {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
