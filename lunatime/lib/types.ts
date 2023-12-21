@@ -46,26 +46,32 @@ export type GetFertileRange = (
 export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 export type GetMenstrualRange = (start: Date, length: number) => [Date, Date];
 
+export type CycleInfo = {
+  cycleLength: Number;
+  periodLength: Number;
+  dates: CycleDates;
+}
+
 export type CycleDates = {
-  dates: [
-    {
-      _id: String;
-      createdAt: Date;
-      lastEdited: Date;
-      cycleLength: Number;
-      periodLength: Number;
-      fertileRange: [Date, Date];
-      pmsRange: [Date, Date];
-      menstrualRange: [Date, Date];
-    },
-  ];
-};
+  _id: String;
+  createdAt: Date;
+  lastEdited: Date;
+  cycleLength: Number;
+  periodLength: Number;
+  fertileRange: [Date, Date];
+  pmsRange: [Date, Date];
+  menstrualRange: [Date, Date];
+}[];
+
 
 // PROFILE
 export type GetProfile = (exclude: string) => Promise<ProfileInfo>;
 
+export type FormatProfileForm = (id: string, form: FormDataEntryValue) => PatchedInfo;
+
 export type PatchedInfo =
-  Pick< ProfileInfo, '_id' | 'phone' | 'email' | 'address' > & {
+  Pick< ProfileInfo, 'phone' | 'email' | 'address' > & {
+    id: string;
     newPic: Buffer;
 };
 
