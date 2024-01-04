@@ -40,7 +40,7 @@ export interface InputProps
   extends React.HTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputClasses> {
       required?: boolean;
-      type?: string | number;
+      type?: string;
       value?: string | number;
     }
 
@@ -48,9 +48,6 @@ const Input: FC<InputProps> = ({
   intent,
   size,
   className,
-  required,
-  type,
-  value,
   ...props
 }) => {
   return (
