@@ -1,104 +1,79 @@
 'use client';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
- import { defaultStyles } from '@/lib/defaultStyles';
-import { CycleDates } from '@/lib/types';
+import { Dispatch, SetStateAction, useEffect, MouseEvent, useState } from 'react';
+import { CycleDates, CalRanges, CalModals } from '@/lib/types';
 import { add } from 'date-fns';
 import Modal from 'react-modal';
+import Button from '@/components/Button';
 
-Modal.setAppElement('#cal-modal');
+Modal.setAppElement('#action-modal');
 
 export default function CalActionModal({
   date,
   cycleDates,
-  showActionModal,
-  setShowActionModal,
-  setShowNoteModal,
-  setShowEventModal,
-  fertileRanges,
-  pmsRanges,
-  menstrualRanges,
+  modals,
+  setModals,
+  ranges,
   isWithinRanges,
 }: {
   date: Date;
   cycleDates: CycleDates;
-  showActionModal: boolean;
-  setShowActionModal: Dispatch<SetStateAction<boolean>>;
-  setShowNoteModal: Dispatch<SetStateAction<boolean>>;
-  setShowEventModal: Dispatch<SetStateAction<boolean>>;
-  fertileRanges: Date[][];
-  pmsRanges: Date[][];
-  menstrualRanges: Date[][];
+  modals: CalModals;
+  setModals: Dispatch<SetStateAction<CalModals>>;
+  ranges: CalRanges;
   isWithinRanges: (date: Date, ranges: Date[][]) => boolean;
 }) {
-  const { dates } = cycleDates;
-  const [finalDate, setFinalDate] = useState<Date>(new Date());
+  const [canMarkNextPeriod, setCanMarkNextPeriod] = useState<Date[]>([new Date(), new Date()]);
+  const { fertileRanges, pmsRanges, menstrualRanges } = ranges;
+  const { actionModal, noteModal, eventModal } = modals;
 
   useEffect(() => {
-    const lastCycle = dates[dates.length - 1].cycle;
-    let lastFound;
-
-    if (lastCycle.mEnd) {
-      lastFound = lastCycle.mEnd;
-    } else if (lastCycle.pEnd) {
-      lastFound = lastCycle.pEnd;
-    } else if (lastCycle.fEnd) {
-      lastFound = lastCycle.fEnd;
-    } else {
-      lastFound = new Date();
-    }
-
-    setFinalDate(lastFound);
-  }, [dates]);
-
-  const handleChoice = (e: any): void => {
-    e.preventDefault();
-    const choice = e.target.innerText;
-    if (choice.includes('Note')) {
-      setShowNoteModal(true);
-    } else if (choice.includes('Event')) {
-      setShowEventModal(true);
-    }
-    setShowActionModal(false);
-  };
+    const prevPeriodEnd = menstrualRanges[menstrualRanges.length - 2][1];
+    const curPeriodStart = menstrualRanges[menstrualRanges.length - 1][0];
+    setCanMarkNextPeriod([prevPeriodEnd, curPeriodStart]);
+  }, [cycleDates]);
 
   const showEventPrompt = (): boolean => {
-    if (date >= add(finalDate, { days: 7 })) {
-      return true;
-    }
-    if (
-      isWithinRanges(date, fertileRanges) ||
-      isWithinRanges(date, pmsRanges) ||
-      isWithinRanges(date, menstrualRanges)
-    ) {
+    const [prevLimit, curLimit] = canMarkNextPeriod;
+    if (date > prevLimit && date < curLimit) {
       return true;
     }
     return false;
   };
 
+  const handleChoice = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    const choice = e.target.innerText; // TO-DO?
+    if (choice.includes('Note')) {
+      setModals((s) => ({ ...s, noteModal: true, actionModal: false }));
+    } else if (choice.includes('Event')) {
+      setModals((s) => ({ ...s, eventModal: true, actionModal: false }));
+    }
+  };
+
   return (
-    <div
-      className={`${defaultStyles.modalDiv} ${showActionModal ? '' : 'hidden'}`}
-    >
+    <div id="action-modal">
       <Modal
-        isOpen={showActionModal}
-        onRequestClose={() => setShowActionModal(false)}
-        overlayClassName={defaultStyles.modalOverlay}
-        className={defaultStyles.modalStyle}
+        isOpen={actionModal}
+        onRequestClose={() => setModals((s) => ({ ...s, actionModal: false }))}
+        // overlayClassName={defaultStyles.modalOverlay}
+        // className={defaultStyles.modalStyle}
       >
         <h1 className="mb-6 text-xl">Would you like to...</h1>
-        <button
-          className={defaultStyles.button + defaultStyles.hoverSm}
+        <Button
+          intent="primary"
+          size="medium"
           onClick={handleChoice}
         >
           Add a Note
-        </button>
+        </Button>
         {showEventPrompt() && (
-          <button
-            className={defaultStyles.button + defaultStyles.hoverSm}
+          <Button
+            intent="primary"
+            size="medium"
             onClick={handleChoice}
           >
-            Add or Edit an Event
-          </button>
+            Edit an Event
+          </Button>
         )}
       </Modal>
     </div>

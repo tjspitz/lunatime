@@ -2,10 +2,12 @@
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import Modal from 'react-modal';
+import Button from '@/components/Button';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { CycleDates, PutCycles, RangeData } from '@/lib/types';
+import { CalModals, CycleDates, PutCycles, RangeData } from '@/lib/types';
 import { defaultStyles } from '@/lib/defaultStyles';
-Modal.setAppElement('#cal-modal');
+
+Modal.setAppElement('#event-modal');
 
 const defaultRange: RangeData = {
   index: -1,
@@ -17,20 +19,20 @@ export default function CalEventModal({
   date,
   cycleDates,
   setCycleDates,
-  showEventModal,
-  setShowEventModal,
+  modals,
+  setModals,
   isWithinRange,
 }: {
   date: Date;
   cycleDates: CycleDates;
   setCycleDates: Dispatch<SetStateAction<CycleDates>>;
-  showEventModal: boolean;
-  setShowEventModal: Dispatch<SetStateAction<boolean>>;
+  modals: CalModals;
+  setModals: Dispatch<SetStateAction<CalModals>>;
   isWithinRange: (date: Date, range: Date[]) => boolean;
 }) {
   const [value, setValue] = useState(date);
-  const [currentRange, setCurrentRange] = useState<RangeData>(defaultRange);
-  const [newRange, setNewRange] = useState<RangeData>(defaultRange);
+  const [currentRange, setCurrentRange] = useState<RangeData>({ ...defaultRange });
+  const [newRange, setNewRange] = useState<RangeData>({ ...defaultRange });
   const [newEventType, setNewEventType] = useState<string>('');
 
   useEffect(() => setCurrentRange(findRange()), [date]);
@@ -38,31 +40,30 @@ export default function CalEventModal({
 
   const findRange = (): RangeData => {
     const today = date;
-    const { dates } = cycleDates;
-    for (let i = 0; i < dates.length; i++) {
-      const cycle = dates[i].cycle;
-      if (today > cycle.mEnd) {
+    for (var i = 0; i < cycleDates.length; i++) {
+      const { fertileRange, pmsRange, menstrualRange } = cycleDates[i];
+      if (today > menstrualRange[1]) {
         continue;
       }
-      if (isWithinRange(today, [cycle.fStart, cycle.fEnd])) {
+      if (isWithinRange(today, [fertileRange[0], fertileRange[1]])) {
         return {
           index: i,
           type: 'fertile',
-          range: [cycle.fStart, cycle.fEnd],
+          range: [fertileRange[0], fertileRange[1]],
         };
       }
-      if (isWithinRange(today, [cycle.pStart, cycle.pEnd])) {
+      if (isWithinRange(today, [pmsRange[0], pmsRange[1]])) {
         return {
           index: i,
           type: 'pre-menstrual',
-          range: [cycle.pStart, cycle.pEnd],
+          range: [pmsRange[0], pmsRange[1]],
         };
       }
-      if (isWithinRange(today, [cycle.mStart, cycle.mEnd])) {
+      if (isWithinRange(today, [menstrualRange[0], menstrualRange[1]])) {
         return {
           index: i,
           type: 'menstrual',
-          range: [cycle.mStart, cycle.mEnd],
+          range: [menstrualRange[0], menstrualRange[1]],
         };
       }
     }
@@ -74,7 +75,7 @@ export default function CalEventModal({
     setNewRange({
       index: currentRange.index,
       type: currentRange.type || newEventType,
-      range: newDate, // TODO
+      range: [date, newDate], // TODO
     });
   };
 
@@ -84,18 +85,18 @@ export default function CalEventModal({
     const start = newRange.type[0] + 'Start';
     const end = newRange.type[0] + 'End';
     const newCycles = { ...cycleDates };
-    newCycles.dates[i].cycle[start] = newRange.range[0];
-    newCycles.dates[i].cycle[end] = newRange.range[1];
+    newCycles[i].cycle[start] = newRange.range[0];
+    newCycles[i].cycle[end] = newRange.range[1];
     putCycles(cycleDates._id, newCycles);
     setCycleDates(newCycles);
-    setShowEventModal(false);
+    setModals((s) => ({ ...s, eventModal: false }));
   };
 
   const handleModalClose = (e: any): void => {
     e.preventDefault();
-    setNewRange(defaultRange);
+    setNewRange({ ...defaultRange });
     setNewEventType('');
-    setShowEventModal(false);
+    setModals((s) => ({ ...s, eventModal: false }));
   };
 
   const handleTypeClick = (e: any): void => {
@@ -104,23 +105,22 @@ export default function CalEventModal({
   };
 
   return (
-    <div
-      className={`${defaultStyles.modalDiv} ${showEventModal ? '' : 'hidden'}`}
-    >
+    <div id="event-modal">
       <Modal
-        isOpen={showEventModal}
+        isOpen={modals.eventModal}
         onRequestClose={handleModalClose}
-        overlayClassName={defaultStyles.modalOverlay}
-        className={defaultStyles.modalStyle}
+        // overlayClassName={defaultStyles.modalOverlay}
+        // className={defaultStyles.modalStyle}
       >
         <div className="flex justify-between">
           <h1 className="mb-6 text-xl">Editing {date.toDateString()}...</h1>
-          <button
-            className={`self-start text-lg text-gray-500 ${defaultStyles.hoverMed} hover:text-red-400`}
+          <Button
+            intent="primary"
+            size="medium"
             onClick={handleModalClose}
           >
             X
-          </button>
+          </ Button>
         </div>
         {currentRange.type ? (
           <>
@@ -144,13 +144,15 @@ export default function CalEventModal({
               Creating a new {newEventType} event:
             </p>
             {['Fertility', 'Pre-Menstrual', 'Menstruation'].map((text, i) => (
-              <button
+              <Button
                 key={i + text}
-                className={`${defaultStyles.button} ${defaultStyles.hoverSm} focus:ring focus:ring-red-900`}
+                intent="secondary"
+                size="small"
+                className="focus:ring focus:ring-red-900"
                 onClick={handleTypeClick}
               >
                 {text}
-              </button>
+              </Button>
             ))}
             <Calendar
               className={'min-w-fit'}
@@ -163,12 +165,13 @@ export default function CalEventModal({
             />
           </>
         )}
-        <button
-          className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded-md ${defaultStyles.hoverMed}`}
+        <Button
+            intent="primary"
+            size="medium"
           onClick={handleSaveClick}
         >
           Save
-        </button>
+        </Button>
       </Modal>
     </div>
   );
