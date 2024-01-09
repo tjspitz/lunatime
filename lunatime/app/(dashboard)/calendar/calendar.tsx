@@ -1,40 +1,44 @@
 'use client';
-import clsx from 'clsx';
 import 'react-calendar/dist/Calendar.css';
+import clsx from 'clsx';
 import styles from './styles.module.css';
 import Calendar from 'react-calendar';
-import CalActionModal from '@/components/CalActionModal';
-import CalNoteModal from '@/components/CalNoteModal';
-import CalEventModal from '@/components/CalEventModal';
-import { CycleDates, CycleInfo } from '@/lib/types';
+import CalNoteModal from './(calModals)/CalNoteModal';
+import CalActionModal from './(calModals)/CalActionModal';
+import CalEventModal from './(calModals)/CalEventModal';
+import { CalModals, CalRanges, CycleDates, CycleInfo } from '@/lib/types';
 import { isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
+  const [value, setValue] = useState<Date>(new Date());
   const [cycleDates, setCycleDates] = useState<CycleDates>(cycles.dates);
-  const [value, setValue] = useState(new Date());
-  const [fertileRanges, setFertileRanges] = useState<Date[][]>(
-    rangeToStyle(cycleDates, 'fertileRange')
-  );
-  const [pmsRanges, setPmsRanges] = useState<Date[][]>(
-    rangeToStyle(cycleDates, 'pmsRange')
-  );
-  const [menstrualRanges, setMenstrualRanges] = useState<Date[][]>(
-    rangeToStyle(cycleDates, 'menstrualRange')
-  );
-  const [showActionModal, setShowActionModal] = useState<boolean>(false);
-  const [showNoteModal, setShowNoteModal] = useState<boolean>(false);
-  const [showEventModal, setShowEventModal] = useState<boolean>(false);
+
+  const [ranges, setRanges] = useState<CalRanges>({
+    fertileRanges: rangeToStyle(cycleDates, 'fertileRange'),
+    pmsRanges: rangeToStyle(cycleDates, 'pmsRange'),
+    menstrualRanges: rangeToStyle(cycleDates, 'menstrualRange'),
+  });
+  const [modals, setModals] = useState<CalModals>({
+    actionModal: false,
+    noteModal: false,
+    eventModal: false,
+  });
 
   useEffect(() => {
-    setFertileRanges(rangeToStyle(cycleDates, 'fertileRange'));
-    setPmsRanges(rangeToStyle(cycleDates, 'pmsRange'));
-    setMenstrualRanges(rangeToStyle(cycleDates, 'menstrualRange'));
+    setRanges((s) => {
+      return ({
+          ...s,
+          fertileRanges: rangeToStyle(cycleDates, 'fertileRange'),
+          pmsRanges: rangeToStyle(cycleDates, 'pmsRange'),
+          menstrualRanges: rangeToStyle(cycleDates, 'menstrualRange'),
+        });
+    })
   }, [cycleDates]);
 
   const handleChange = (newDate: Date): void => {
     setValue(newDate);
-    setShowActionModal(true);
+    setModals((s) => ({ ...s, actionModal: true }));
   };
 
   const tileClassName = ({
@@ -47,6 +51,7 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
     // WILL NOT play well w/ Tailwind classes...
       // as of now, will ONLY play well w/ raw CSS
       // hence the CSS module in the calendar dir
+    const { fertileRanges, pmsRanges, menstrualRanges } = ranges;
     let style = '';
 
     if (view === 'month') {
@@ -68,40 +73,36 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
       <Calendar
         className={'min-w-fit'}
         tileClassName={tileClassName}
-        calendarType="US"
+        calendarType="gregory"
         view="month"
         minDetail="year"
         value={value}
         onChange={handleChange}
       />
-      {/* <div>
+      <div>
         <CalActionModal
           date={value}
           cycleDates={cycleDates}
-          showActionModal={showActionModal}
-          setShowActionModal={setShowActionModal}
-          setShowNoteModal={setShowNoteModal}
-          setShowEventModal={setShowEventModal}
-          fertileRanges={fertileRanges}
-          pmsRanges={pmsRanges}
-          menstrualRanges={menstrualRanges}
+          modals={modals}
+          setModals={setModals}
+          ranges={ranges}
           isWithinRanges={isWithinRanges}
         />
       </div>
       <div>
         <CalNoteModal
           date={value}
-          showNoteModal={showNoteModal}
-          setShowNoteModal={setShowNoteModal}
+          modals={modals}
+          setModals={setModals}
         />
       </div>
-      <div>
+      {/* <div>
         <CalEventModal
           date={value}
           cycleDates={cycleDates}
           setCycleDates={setCycleDates}
-          showEventModal={showEventModal}
-          setShowEventModal={setShowEventModal}
+          modals={modals}
+          setModals={setModals}
           isWithinRange={isWithinRange}
         />
       </div> */}
@@ -137,5 +138,5 @@ function styleRangeBounds(date: Date, ranges: Date[][]): string {
 
 // TO-DO - type the 'range' so TS leaves me alone
 function rangeToStyle(dates: CycleDates, range: keyof typeof dates[0]): Date[][] {
-  return dates.map((cycle) => cycle[range].map((str: string) => new Date(str)));
+  return dates.map((cycle) => cycle[range].map((dates: Date[]) => dates));
 }

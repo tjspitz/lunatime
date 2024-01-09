@@ -63,6 +63,17 @@ export type CycleDates = {
   menstrualRange: [Date, Date];
 }[];
 
+export type CalRanges = {
+  fertileRanges: Date[][];
+  pmsRanges: Date[][];
+  menstrualRanges: Date[][];
+}
+
+export type CalModals = {
+  actionModal: boolean;
+  noteModal: boolean;
+  eventModal: boolean;
+}
 
 // PROFILE
 export type GetProfile = (exclude: string) => Promise<ProfileInfo>;
