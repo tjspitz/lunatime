@@ -4,7 +4,7 @@ import { FC } from 'react';
 const buttonClasses = cva(
   [
     'rounded-2xl',
-    'hover:scale-110',
+    'hover:scale-110 transition-all ease-in-out duration-500',
     'active:scale-100',
     'transition',
     'duration-200',
