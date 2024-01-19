@@ -54,6 +54,15 @@ export const addCycle = async(newCycle) => {
   });
 };
 
+export const deleteCycle = async(cycleId) => {
+  return fetcher({
+    url: '/api/calendar',
+    method: 'DELETE',
+    body: cycleId,
+    json: true,
+  });
+};
+
 // no need for its own route(?)
 // export const addCycle = async(newCycle) => {
 //   return fetcher({

@@ -1,15 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { getUserFromCookie } from '@/lib/auth';
-import { add } from 'date-fns';
-import { makeCycle } from '@/lib/mCalc';
 import { CyclePost, CycleReq } from '@/lib/types';
+import { makeCycle } from '@/lib/utils/cycleApiUtils';
+import { add } from 'date-fns';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 // the only time this API is called is when a user is new (has no cycles)
 // following the first time, user would either confirm or edit predicted next cycle
 // calling a PUT or PATCH API from Calendar
-
 export async function POST(req: NextRequest, res: NextResponse) {
   const userCookie = cookies().get('lunatime_cookie');
 
@@ -62,4 +61,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
     return res;
   }
+}
+
+// DELETE a cycle from the User.dates[][]
+export async function DELETE(req: NextRequest, res: NextResponse) {
+  const body: string = await req.json();
+
+  res = NextResponse.json(
+    {
+      body: `Once you implement me, I will delete the Cycle Object found at ${body}`,
+      success: false, // for now
+    },
+    {
+      status: 204,
+      headers: { 'content-type': 'application/json' },
+    },
+  );
+  return res;
 }
