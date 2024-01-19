@@ -1,13 +1,14 @@
 'use client';
-import 'react-calendar/dist/Calendar.css';
 import clsx from 'clsx';
-import styles from './styles.module.css';
 import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import styles from './styles.module.css';
 import CalNoteModal from './(calModals)/CalNoteModal';
-import CalActionModal from './(calModals)/CalActionModal';
-import CalEventModal from './(calModals)/CalEventModal';
+// import CalActionModal from './(calModals)/CalActionModal';
+import CalActionsModal from '@/components/CalActionsModal';
+// import CalEventModal from './(calModals)/CalEventModal';
 import { CalModals, CalRanges, CycleDates, CycleInfo } from '@/lib/types';
-import { isWithinInterval } from 'date-fns';
+import { isWithinRanges, rangeToStyle, styleRangeBounds } from '@/lib/utils/calUtils';
 import { useEffect, useState } from 'react';
 
 export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
@@ -24,6 +25,8 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
     noteModal: false,
     eventModal: false,
   });
+  const [actionModalMode, setActionModalMode] = useState<string>('');
+  const { fertileRanges, pmsRanges, menstrualRanges } = ranges;
 
   useEffect(() => {
     setRanges((s) => {
@@ -38,6 +41,9 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
 
   const handleChange = (newDate: Date): void => {
     setValue(newDate);
+    if (isWithinRanges(newDate, menstrualRanges)) {
+      setActionModalMode('during-period');
+    }
     setModals((s) => ({ ...s, actionModal: true }));
   };
 
@@ -51,9 +57,7 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
     // WILL NOT play well w/ Tailwind classes...
       // as of now, will ONLY play well w/ raw CSS
       // hence the CSS module in the calendar dir
-    const { fertileRanges, pmsRanges, menstrualRanges } = ranges;
     let style = '';
-
     if (view === 'month') {
         if (isWithinRanges(date, fertileRanges)) {
           style = clsx(style, styles.fertile, styles[styleRangeBounds(date, fertileRanges)]);
@@ -80,11 +84,13 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
         onChange={handleChange}
       />
       <div>
-        <CalActionModal
+        <CalActionsModal
+          mode={actionModalMode}
           date={value}
           cycleDates={cycleDates}
           modals={modals}
           setModals={setModals}
+          setActionModalMode={setActionModalMode}
           ranges={ranges}
           isWithinRanges={isWithinRanges}
         />
@@ -110,33 +116,33 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
   );
 }
 
-function isWithinRange(date: Date, range: Date[]): boolean {
-  const start = range[0];
-  const end = range[1];
-  return isWithinInterval(date, { start, end });
-}
+// function isWithinRange(date: Date, range: Date[]): boolean {
+//   const start = range[0];
+//   const end = range[1];
+//   return isWithinInterval(date, { start, end });
+// }
 
-function isWithinRanges(date: Date, ranges: Date[][]): boolean {
-  return ranges.some((range) => isWithinRange(date, range));
-}
+// function isWithinRanges(date: Date, ranges: Date[][]): boolean {
+//   return ranges.some((range) => isWithinRange(date, range));
+// }
 
-function styleRangeBounds(date: Date, ranges: Date[][]): string {
-  let style = '';
-  const roundedDate = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
-  ranges.forEach((range) => {
-    let roundedFirstBound = `${range[0].getDate()}${range[0].getMonth()}${range[0].getFullYear()}`;
-    let roundedLastBound = `${range[1].getDate()}${range[1].getMonth()}${range[1].getFullYear()}`;
-    if (roundedDate === roundedFirstBound) {
-      style += 'first';
-    }
-    if (roundedDate === roundedLastBound) {
-      style += 'last';
-    }
-  });
-  return style;
-}
+// function styleRangeBounds(date: Date, ranges: Date[][]): string {
+//   let style = '';
+//   const roundedDate = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+//   ranges.forEach((range) => {
+//     let roundedFirstBound = `${range[0].getDate()}${range[0].getMonth()}${range[0].getFullYear()}`;
+//     let roundedLastBound = `${range[1].getDate()}${range[1].getMonth()}${range[1].getFullYear()}`;
+//     if (roundedDate === roundedFirstBound) {
+//       style += 'first';
+//     }
+//     if (roundedDate === roundedLastBound) {
+//       style += 'last';
+//     }
+//   });
+//   return style;
+// }
 
-// TO-DO - type the 'range' so TS leaves me alone
-function rangeToStyle(dates: CycleDates, range: keyof typeof dates[0]): Date[][] {
-  return dates.map((cycle) => cycle[range].map((dates: Date[]) => dates));
-}
+// // TO-DO - type the 'range' so TS leaves me alone
+// function rangeToStyle(dates: CycleDates, range: keyof typeof dates[0]): Date[][] {
+//   return dates.map((cycle) => cycle[range].map((dates: Date[]) => dates));
+// }

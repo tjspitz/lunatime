@@ -1,11 +1,11 @@
-import { add, sub, differenceInDays } from 'date-fns';
+import { add, differenceInDays, sub } from 'date-fns';
 import {
   CyclePost,
-  MakeCycle,
-  GetPmsRange,
   GetFertileRange,
   GetMenstrualRange,
-} from './types';
+  GetPmsRange,
+  MakeCycle,
+} from '@/lib/types';
 
 export const makeCycle: MakeCycle = (current) => {
   const { cycleLength, periodLength, periodStart, lastEdited } = current;
