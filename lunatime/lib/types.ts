@@ -51,8 +51,7 @@ export type CycleInfo = {
   periodLength: Number;
   dates: CycleDates;
 }
-
-export type CycleDates = {
+export type CycleDate = {
   _id: String;
   createdAt: Date;
   lastEdited: Date;
@@ -61,7 +60,9 @@ export type CycleDates = {
   fertileRange: [Date, Date];
   pmsRange: [Date, Date];
   menstrualRange: [Date, Date];
-}[];
+}
+
+export type CycleDates = CycleDate[];
 
 export type CalRanges = {
   fertileRanges: Date[][];
