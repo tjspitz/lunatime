@@ -47,6 +47,7 @@ export type GetPmsRange = (rangeEnd: Date) => [Date, Date];
 export type GetMenstrualRange = (start: Date, length: number) => [Date, Date];
 
 export type CycleInfo = {
+  _id: String;
   cycleLength: Number;
   periodLength: Number;
   dates: CycleDates;
