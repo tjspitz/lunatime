@@ -11,9 +11,10 @@ import { CalModals, CalRanges, CycleDates, CycleInfo } from '@/lib/types';
 import { isWithinRanges, rangeToStyle, styleRangeBounds } from '@/lib/utils/calUtils';
 import { useEffect, useState } from 'react';
 
-export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
+export default function CalendarContainer({ user }: { user: CycleInfo }) {
+  const { dates: cycleDates } = user;
   const [value, setValue] = useState<Date>(new Date());
-  const [cycleDates, setCycleDates] = useState<CycleDates>(cycles.dates);
+  // const [cycleDates, setCycleDates] = useState<CycleDates>(cycles.dates);
 
   const [ranges, setRanges] = useState<CalRanges>({
     fertileRanges: rangeToStyle(cycleDates, 'fertileRange'),
@@ -87,7 +88,7 @@ export default function CalendarContainer({ cycles }: { cycles: CycleInfo }) {
         <CalActionsModal
           mode={actionModalMode}
           date={value}
-          cycleDates={cycleDates}
+          user={user}
           modals={modals}
           setModals={setModals}
           setActionModalMode={setActionModalMode}
