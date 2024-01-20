@@ -81,7 +81,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       { success: false },
       {
         status: 400,
-        headers: defaultContentType,,
+        headers: defaultContentType,
       },
     )
   }
