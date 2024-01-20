@@ -5,9 +5,9 @@ import { CycleInfo, GetCycles, ReqOptions } from '@/lib/types';
 import CalendarContainer from './calendar';
 
 export default async function CalendarPage () {
-  const include = 'cycleLength periodLength dates';
-  const cycles: CycleInfo = JSON.parse(await getCycles(include));
-  cycles.dates = cycles.dates.map((cycle) => {
+  const include = '_id cycleLength periodLength dates';
+  const user: CycleInfo = JSON.parse(await getCycles(include));
+  user.dates = user.dates.map((cycle) => {
     const isoFertRange = cycle.fertileRange;
     const isoPmsRange = cycle.pmsRange;
     const isoPeriodRange = cycle.menstrualRange;
@@ -29,7 +29,7 @@ export default async function CalendarPage () {
           <p className="text-lg italic text-black/25">
             This will be the page which renders your calendar
           </p>
-          <CalendarContainer cycles={cycles} />
+          <CalendarContainer user={user} />
         </div>
       </div>
     </main>
