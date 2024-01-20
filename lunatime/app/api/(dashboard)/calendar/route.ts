@@ -1,10 +1,13 @@
 import { getUserFromCookie } from '@/lib/auth';
+import mongo from '@/lib/db/dbConfig';
+import User from '@/lib/db/userModel';
 import { CyclePost, CycleReq } from '@/lib/types';
 import { makeCycle } from '@/lib/utils/cycleApiUtils';
 import { add } from 'date-fns';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, userAgent } from 'next/server';
+import { defaultContentType } from '@/lib/api';
 
 // the only time this API is called is when a user is new (has no cycles)
 // following the first time, user would either confirm or edit predicted next cycle
@@ -43,7 +46,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       { success: true },
       {
         status: 201,
-        headers: { 'content-type': 'application/json' }
+        headers: defaultContentType,
       },
     );
     return res;
@@ -51,12 +54,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
     console.error(error);
     res = NextResponse.json(
       {
-        body: { 'data': error },
+        body: error,
         success: false,
       },
       {
         status: 400,
-        headers: { 'content-type': 'application/json' },
+        headers: defaultContentType,,
       },
     );
     return res;
@@ -65,17 +68,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 // DELETE a cycle from the User.dates[][]
 export async function DELETE(req: NextRequest, res: NextResponse) {
-  const body: string = await req.json();
+  const [userId, cycleId] = await req.json();
+  const update = { $pull: { 'dates': { _id: cycleId } } };
 
-  res = NextResponse.json(
-    {
-      body: `Once you implement me, I will delete the Cycle Object found at ${body}`,
-      success: false, // for now
-    },
-    {
-      status: 204,
-      headers: { 'content-type': 'application/json' },
-    },
-  );
-  return res;
+  try {
+    await User.findByIdAndUpdate(userId, update);
+    res = NextResponse.json({ status: 204 });
+    return res;
+  } catch (error) {
+    console.error(error);
+    res = NextResponse.json(
+      { success: false },
+      {
+        status: 400,
+        headers: defaultContentType,,
+      },
+    )
+  }
 }

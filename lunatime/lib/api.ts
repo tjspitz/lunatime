@@ -1,3 +1,5 @@
+export const defaultContentType = { 'Content-type': 'application/json' };
+
 const fetcher = async ({ url, method, body, json = true }) => {
   try {
     const res = await fetch(url, {
@@ -5,7 +7,7 @@ const fetcher = async ({ url, method, body, json = true }) => {
       body: body && JSON.stringify(body),
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...defaultContentType,
       },
     });
 
@@ -54,12 +56,12 @@ export const addCycle = async(newCycle) => {
   });
 };
 
-export const deleteCycle = async(cycleId) => {
+export const deleteCycle = async(userId, cycleId) => {
   return fetcher({
     url: '/api/calendar',
     method: 'DELETE',
-    body: cycleId,
-    json: true,
+    body: [userId, cycleId],
+    json: false,
   });
 };
 

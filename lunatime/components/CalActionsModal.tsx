@@ -1,6 +1,6 @@
 'use client';
 import { deleteCycle } from '@/lib/api';
-import { CalModals, CalRanges, CycleDates } from '@/lib/types';
+import { CalModals, CalRanges, CycleDates, CycleInfo } from '@/lib/types';
 import { getCycleFromSelected } from '@/lib/utils/calUtils';
 import { add } from 'date-fns';
 import {
@@ -43,7 +43,7 @@ Modal.setAppElement('#action-modal');
 export default function CalActionsModal({
   mode,
   date,
-  cycleDates,
+  user,
   modals,
   setModals,
   setActionModalMode,
@@ -52,15 +52,16 @@ export default function CalActionsModal({
 }: {
   mode: string;
   date: Date;
-  cycleDates: CycleDates;
+  user: CycleInfo;
   modals: CalModals;
   setActionModalMode: Dispatch<SetStateAction<string>>;
   setModals: Dispatch<SetStateAction<CalModals>>;
   ranges: CalRanges;
   isWithinRanges: (date: Date, ranges: Date[][]) => boolean;
 }) {
-  const selectedCycle = getCycleFromSelected(date, cycleDates);
+  const {dates: cycleDates } = user;
   const { actionModal } = modals;
+  const selectedCycle = getCycleFromSelected(date, cycleDates);
 
   const handleChoice = async (choice: string) => {
     if (choice === 'note') {
@@ -73,11 +74,8 @@ export default function CalActionsModal({
       setModals((s) => ({ ...s, actionModal: false, eventModal: true }));
     }
     if (choice === 'delete') {
-      // finish implementing in api/calendar/route.ts
-        // show a confirmation rather than logging
-      const res = await deleteCycle(selectedCycle._id);
-      console.log(res);
-
+      // TODO: show a confirmation
+      await deleteCycle(user._id, selectedCycle._id);
       setModals((s) => ({ ...s, actionModal: false }));
     }
     setActionModalMode('');
